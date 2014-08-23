@@ -1,0 +1,3 @@
+http://rubular.com/
+
+http://enarion.net/programming/php/google-client-api/google-client-api-php/
