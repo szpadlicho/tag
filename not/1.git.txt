@@ -1,0 +1,3 @@
+git add.
+git commit -m "kom"
+git push tag master
