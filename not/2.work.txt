@@ -37,8 +37,3 @@ kilka rekalm jednego produktu !ważne
 slowo kluczowe -> najszersz grono z synonimami i przypadkami i odmioanami
 "slowo kluczowe" -> srednie grono musi wystapic słowo kluczowe w formie jakiej jest w towarzytwie innych słow na poczatku lub koncu
 [slowo kluczow] -> najwęższe grono musi wystapic dokladnie takie jakie jest i nic poza nim
-
-
-
-The Critic
-reklama nlp
