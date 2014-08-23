@@ -78,7 +78,7 @@ isset($_POST['add']) ? $rec->__setTXT('txt3', $_POST['txt3']) : 'error3';//3
     (function($){
         $(document).ready(function()
         {
-            // Save Form
+            // Save Form alt+s
             $(window).keypress(function(event)
             {
                 if (!(event.which == 115 && event.ctrlKey) && !(event.which == 19)) return true;
