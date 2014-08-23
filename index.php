@@ -1,0 +1,1 @@
+<?php include ("tag_cloud.php"); ?>

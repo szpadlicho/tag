@@ -1,0 +1,15 @@
+http://domy.procyon.com.pl/
+http://yuilibrary.com/
+http://pl.anno-online.com/pl/play
+http://www.360studio.org/
+
+----------------------------------
+
+https://github.com/hayageek/jquery-upload-file
+http://stackoverflow.com/questions/3353853/php-using-scandir-folders-are-treated-as-files
+
+https://www.google.pl/?gws_rd=ssl#q=php+variable+to+ajax
+http://stackoverflow.com/questions/5156686/pass-php-variable-to-ajax-variable
+
+http://stackoverflow.com/questions/7497733/how-can-use-php-to-check-if-a-directory-is-empty
+http://www.programosy.pl/program,database-net.html
