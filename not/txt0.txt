@@ -1,0 +1,1 @@
+﻿not1.php tworzy not1.txt i teraz foreach wyswietlam linki u góry
