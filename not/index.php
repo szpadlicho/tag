@@ -34,9 +34,7 @@ class Notatnik{
 	}
 }
 $rec = new Notatnik();
-isset($_POST['add']) ? $rec->__setTXT('txt0', $_POST['txt1']) : 'error1';//1
-//isset($_POST['add']) ? $rec->__setTXT('txt2', $_POST['txt2']) : 'error2';//2
-//isset($_POST['add']) ? $rec->__setTXT('txt3', $_POST['txt3']) : 'error3';//3
+isset($_POST['add']) ? $rec->__setTXT('txt0', $_POST['txt0']) : 'error1';//0
 ?>
 <!DOCTYPE HTML>
 <html lang="pl">
@@ -69,18 +67,9 @@ isset($_POST['add']) ? $rec->__setTXT('txt0', $_POST['txt1']) : 'error1';//1
     <section id="site-place-holder">
         <span id="ak1" class="akapit">Notatnik nr: 1</span >
         <form method="POST">
-            <textarea class="txtarea" name="txt1" ><?php echo $rec->__getTXT('txt0'); ?></textarea><br />
+            <textarea class="txtarea" name="txt0" ><?php echo $rec->__getTXT('txt0'); ?></textarea><br />
             <input type="submit" name="add" value="Zapisz" />
         </form>
-        <!--
-        <span id="ak2"  class="akapit">Notatnik nr: 2</span >
-            <textarea class="txtarea" name="txt2" ><?php echo $rec->__getTXT('txt2'); ?></textarea><br />
-            <input type="submit" name="add" value="Zapisz" />
-        <span id="ak3"  class="akapit">Notatnik nr: 3</span >
-            <textarea class="txtarea" name="txt3" ><?php echo $rec->__getTXT('txt3'); ?></textarea><br />
-            <input type="submit" name="add" value="Zapisz" />
-        </form>
-        -->
     </section>
     <footer>
     </footer>
