@@ -2,30 +2,35 @@
 header('Content-Type: text/html; charset=utf-8');
 session_start();
 class Notatnik{
-	function __setTXT($nazwa, $zawartosc){
-		$file = $nazwa.'.txt';
-		//otwarcie pliku
+	function __setTXT($nazwa, $zawartosc)
+    {
+		$file = 'data/'.$nazwa.'.txt';
+		//open file
 		$fp = fopen($file, 'w');
-		// zapisanie danych
+		//save data
 		fputs($fp, $zawartosc);
-		// zamknięcie pliku
+		//close file
 		fclose($fp);	
 	}
-	function __getTXT($nazwa){
-		$file = $nazwa.'.txt';
-		if(file_exists($file)){	
-			//otwarcie pliku
+	function __getTXT($nazwa)
+    {
+		$file = 'data/'.$nazwa.'.txt';
+		if(file_exists($file))
+        {	
+			//open file
 			$fp = fopen($file, 'r');
-			// sprawdzam wielkość
+			//check size
             $size = filesize($file);
-            if($size > 0 ){
-                // czytam danye
+            if($size > 0 )
+            {
+                //read file
                 $dane = fread($fp, $size);
-                // zamknięcie pliku
+                //close file
                 fclose($fp);
                 return $dane;
             }
-            else{
+            else
+            {
                 return 'pusty';
             }
 		}
@@ -33,6 +38,34 @@ class Notatnik{
 			return 'error';
 		}
 	}
+    function __getNameTab()
+    {
+        // directory files data base
+        $dir = dirname(__FILE__).'/data/';
+        $arr = scandir($dir);
+        $dst = array();
+        foreach($arr as $file){
+            $src = new SplFileInfo($file);
+            //get only extension of file
+            $ext = $src->getExtension();
+            if($file != '.' && $file != '..' && !is_dir($file) && $ext !='php')
+            {
+                //get only file name
+                $name = $src->getBasename('.txt');
+                //add file name to array
+                $dst[] .= $name;
+            }
+        }
+        $_SESSION['count'] = count($dst);
+        return $dst;
+    }
+    function showName()
+    {
+        $i = 0;
+        foreach($this->__getNameTab() as $wyn){
+                echo '<a id="link-'.$i++.'" class="link" href="?file='.$wyn.'">'.$wyn.'</a>';
+            }
+    }
 }
 $rec = new Notatnik();
 !isset($_GET['file']) ? $_GET['file'] = '0.start' : $error = 'error' ;
@@ -62,9 +95,6 @@ isset($_POST['add']) ? $rec->__setTXT($_SESSION['count'].'.'.$_POST['new_name'],
             });
         });
     })(jQuery);
-    </script>
-    <style type="text/css"></style>
-    <script type="text/javascript">
     $(document).ready(function()
     {
         $('#new').click(function()
@@ -72,46 +102,15 @@ isset($_POST['add']) ? $rec->__setTXT($_SESSION['count'].'.'.$_POST['new_name'],
             $('.hidden').css({'display':'inline'});        
         });
     });
-    </script>	
+    </script>          
+    <script type="text/javascript"></script>
+    <style type="text/css"></style>
 </head>
 <body>
     <section id="site-place-holder">
-        <?php 
-        //echo __FILE__.'<br />';
-        //echo basename(__FILE__, '.php').'<br />';
-        //echo basename(__FILE__).'<br />';
-        //echo basename($_SERVER['PHP_SELF']).'<br />';
-        //echo dirname(__FILE__);
-        ?>
         <span id="ak" class="akapit">Notatnik</span >
         <form method="POST">
-            <?php
-            $dir = dirname(__FILE__);
-            $this2 = scandir($dir);
-            //var_dump($this2);
-            $tab = array();
-            foreach($this2 as $file){
-                $ext = new SplFileInfo($file);
-                $ext = $ext->getExtension();
-                if($file != '.' && $file != '..' && !is_dir($file) && $ext !='php'){
-                    $name = new SplFileInfo($file);
-                    //$name = $name->getFilename();
-                    $name = $name->getBasename('.txt');
-                    $tab[] .= $name;
-                }
-            }           
-            $_SESSION['count'] = count($tab);
-            // if(isset($_POST['add'])){//dla cyferek tylko               
-                // $next=$count;
-                // $rec->__setTXT($next, '');
-                // header('Location: index.php?file='.$_GET['file']);
-                // exit;
-            // }
-            //var_dump($tab);
-            foreach($tab as $wyn){
-                echo ' <a class="link" href="?file='.$wyn.'">'.$wyn.'</a> ';
-            }
-            ?>       
+            <?php echo $rec->showName(); ?>       
             <input id="new" type="button" name="new" value="Nowy" />
             <input class="hidden" type="text" name="new_name" />
             <input class="hidden" type="submit" name="add" value="Dodaj" />
