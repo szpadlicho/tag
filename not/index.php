@@ -73,7 +73,7 @@ class Notatnik{
     function reName2()
     {
         rename(dirname(__FILE__).'/data/'.$_GET['file'].'.txt', dirname(__FILE__).'/data/'.$_POST['rename'].'.txt');
-        //$_GET['file']=$_POST['rename'];
+        header('location: ?file='.$_POST['rename']);
     }
 }
 $rec = new Notatnik();
