@@ -57,6 +57,10 @@ class Notatnik{
             }
         }
         $_SESSION['count'] = count($dst);
+        //natural sort arra like 9,10
+        //sort($dst, SORT_NATURAL);
+        //same as up but new
+        natsort($dst);
         return $dst;
     }
     function showName()
