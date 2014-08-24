@@ -70,11 +70,17 @@ class Notatnik{
                 echo '<a id="link-'.$i++.'" class="link" href="?file='.$wyn.'">'.$wyn.'</a>';
             }
     }
+    function reName2()
+    {
+        rename(dirname(__FILE__).'/data/'.$_GET['file'].'.txt', dirname(__FILE__).'/data/'.$_POST['rename'].'.txt');
+        //$_GET['file']=$_POST['rename'];
+    }
 }
 $rec = new Notatnik();
 !isset($_GET['file']) ? $_GET['file'] = '0.start' : $error = 'error' ;
 isset($_POST['save']) ? $rec->__setTXT($_GET['file'], $_POST['txt']) : 'error1';
-isset($_POST['add']) ? $rec->__setTXT($_SESSION['count'].'.'.$_POST['new_name'], '') : 'error2';
+isset($_POST['add']) && !empty($_POST['new_name']) ? $rec->__setTXT($_SESSION['count'].'.'.$_POST['new_name'], '') : 'error2';
+isset($_POST['confirm']) && !empty($_POST['rename']) ? $rec->reName2() : 'error2';
 ?>
 <!DOCTYPE HTML>
 <html lang="pl">
@@ -107,6 +113,13 @@ isset($_POST['add']) ? $rec->__setTXT($_SESSION['count'].'.'.$_POST['new_name'],
             $('.hidden').css({'display':'inline'});        
         });
     });
+    $(document).ready(function()
+    {
+        $('#rename').click(function()
+        {
+            $('.hidden_sec').css({'display':'inline'});        
+        });
+    });
     </script>          
     <script type="text/javascript"></script>
     <style type="text/css">
@@ -132,6 +145,9 @@ isset($_POST['add']) ? $rec->__setTXT($_SESSION['count'].'.'.$_POST['new_name'],
             <input id="new" type="button" name="new" value="Nowy" />
             <input class="hidden" type="text" name="new_name" />
             <input class="hidden" type="submit" name="add" value="Dodaj" />
+            <input id="rename" type="button" name="change" value="Zmień" />
+            <input class="hidden_sec" type="text" name="rename" />
+            <input class="hidden_sec" type="submit" name="confirm" value="Ok" />
         </form>
         <form method="POST">
             <textarea class="txtarea" name="txt" ><?php echo $rec->__getTXT($_GET['file']); ?></textarea><br />
