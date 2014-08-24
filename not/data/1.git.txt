@@ -35,3 +35,7 @@ git remote -v
 git add.
 git commit -m "kom"
 git push tag master
+--przywracanie usunietych plików
+git checkout master
+gir stash
+git rebase master

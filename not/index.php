@@ -108,7 +108,7 @@ isset($_POST['add']) ? $rec->__setTXT($_SESSION['count'].'.'.$_POST['new_name'],
 </head>
 <body>
     <section id="site-place-holder">
-        <span id="ak" class="akapit">Notatnik</span >
+        <span class="header">Notatnik</span >
         <form method="POST">
             <?php echo $rec->showName(); ?>       
             <input id="new" type="button" name="new" value="Nowy" />

@@ -28,15 +28,15 @@ body{
     width:99%;
     height:55em;
 }
-.akapit{
-    display:block;
+.header{
     text-align:center;
+    color:rgb(187,162,255);
+    font-size:1em;
 }
-#ak{color:rgb(69,254,3);}
 a.link{
     font-size:2em;
     text-decoration:none;
-    color:orange;
+    color:rgb(127,162,255);
     margin-right:0.5em;
 }
 a.link:hover{color:red;}
