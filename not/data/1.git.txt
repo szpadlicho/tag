@@ -40,4 +40,4 @@ git checkout master
 gir stash
 git rebase master
 --zmiana domyslengo notatnika
-git config --global core.editor "notepad" 
+git config --global core.editor "notepad++" 
