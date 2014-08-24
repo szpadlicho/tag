@@ -22,7 +22,7 @@ git remote remove [name]
 $ git push --all ALMA
 --------------------------------------------
 git->setup name->cd folder gdzie ma być->git init->git pull https://szpadlicho@github.com/szpadlicho/repo.git albo git clone http://github.com/szpadlicho/repo.git
-git remote  add repo https://szpadlicho:lary1234@github.com/szpadlicho/repo.git
+git remote  add repo https://szpadlicho:haslo@github.com/szpadlicho/repo.git
 git add .
 git commit -am "komentarz"
 git pull repo master
