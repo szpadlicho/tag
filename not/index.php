@@ -83,6 +83,7 @@ isset($_POST['add']) ? $rec->__setTXT($_SESSION['count'].'.'.$_POST['new_name'],
     <title>Notatnik</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.php">
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.5.2.js"></script>
     <script type="text/javascript">
     (function($){
@@ -108,7 +109,20 @@ isset($_POST['add']) ? $rec->__setTXT($_SESSION['count'].'.'.$_POST['new_name'],
     });
     </script>          
     <script type="text/javascript"></script>
-    <style type="text/css"></style>
+    <style type="text/css">
+    <?php
+    for($x=0; $x<$_SESSION['count']; $x++){
+        $r = rand(0,255);
+        $g = rand(0,255);
+        $b = rand(0,255);
+        ?>
+        #link-<?php echo $x; ?>{
+            color: rgb(<?php echo $r; ?>,<?php echo $g; ?>,<?php echo $b; ?>);
+        }
+    <?php
+    }
+    ?>
+    </style>
 </head>
 <body>
     <section id="site-place-holder">
@@ -132,4 +146,8 @@ isset($_POST['add']) ? $rec->__setTXT($_SESSION['count'].'.'.$_POST['new_name'],
     //var_dump ($_POST);
     //var_dump ($_GET);
     //var_dump ($_SESSION);
+    for($x=0; $x<$_SESSION['count']; $x++){
+    echo rand(0,255);
+    echo '<br />';
+    }
 ?>

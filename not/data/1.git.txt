@@ -40,4 +40,6 @@ git checkout master
 gir stash
 git rebase master
 --zmiana domyslengo notatnika
-git config --global core.editor "notepad" 
+https://groups.google.com/forum/#!msg/git-users/4vzpPsriRaw/XE0-ivLyDtAJ
+git config --global core.editor "notepad"
+editor = 'F:\\Notepad++\\notepad++.exe' -multiInst -notabbar -nosession -noplugin
