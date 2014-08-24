@@ -70,17 +70,23 @@ class Notatnik{
                 echo '<a id="link-'.$i++.'" class="link" href="?file='.$wyn.'">'.$wyn.'</a>';
             }
     }
-    function reName2()
+    function __getInt()
     {
-        rename(dirname(__FILE__).'/data/'.$_GET['file'].'.txt', dirname(__FILE__).'/data/'.$_POST['rename'].'.txt');
-        header('location: ?file='.$_POST['rename']);
+        //$int = filter_var($_GET['file'], FILTER_SANITIZE_NUMBER_INT);
+        $int = explode('.',$_GET['file']);
+        return $int[0].'.';
+    }
+    function changeName()
+    {   
+        rename(dirname(__FILE__).'/data/'.$_GET['file'].'.txt', dirname(__FILE__).'/data/'.$this->__getInt().$_POST['rename'].'.txt');
+        header('location: ?file='.$this->__getInt().$_POST['rename']);
     }
 }
 $rec = new Notatnik();
 !isset($_GET['file']) ? $_GET['file'] = '0.start' : $error = 'error' ;
 isset($_POST['save']) ? $rec->__setTXT($_GET['file'], $_POST['txt']) : 'error1';
 isset($_POST['add']) && !empty($_POST['new_name']) ? $rec->__setTXT($_SESSION['count'].'.'.$_POST['new_name'], '') : 'error2';
-isset($_POST['confirm']) && !empty($_POST['rename']) ? $rec->reName2() : 'error2';
+isset($_POST['confirm']) && !empty($_POST['rename']) ? $rec->changeName() : 'error2';
 ?>
 <!DOCTYPE HTML>
 <html lang="pl">
@@ -145,7 +151,8 @@ isset($_POST['confirm']) && !empty($_POST['rename']) ? $rec->reName2() : 'error2
             <input id="new" type="button" name="new" value="Nowy" />
             <input class="hidden" type="text" name="new_name" />
             <input class="hidden" type="submit" name="add" value="Dodaj" />
-            <input id="rename" type="button" name="change" value="Zmień" />
+            <input id="rename" type="button" name="change" value="Zmień" />           
+            <span id='int' class="hidden_sec"><?php echo $rec->__getInt(); ?></span>
             <input class="hidden_sec" type="text" name="rename" />
             <input class="hidden_sec" type="submit" name="confirm" value="Ok" />
         </form>

@@ -31,7 +31,21 @@ body{
 .header{
     text-align:center;
     color:rgb(187,162,255);
-    font-size:1em;
+    font-size:4em;
+    
+    position:absolute;
+    left:-2.5em;
+    top: 1em;
+    /* Safari */
+    -webkit-transform: rotate(90deg);
+    /* Firefox */
+    -moz-transform: rotate(90deg);
+    /* IE */
+    -ms-transform: rotate(90deg);
+    /* Opera */
+    -o-transform: rotate(90deg);
+    /* Internet Explorer */
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
 }
 a.link{
     font-size:2em;
