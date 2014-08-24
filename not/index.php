@@ -146,8 +146,8 @@ isset($_POST['add']) ? $rec->__setTXT($_SESSION['count'].'.'.$_POST['new_name'],
     //var_dump ($_POST);
     //var_dump ($_GET);
     //var_dump ($_SESSION);
-    for($x=0; $x<$_SESSION['count']; $x++){
-    echo rand(0,255);
-    echo '<br />';
-    }
+    // for($x=0; $x<$_SESSION['count']; $x++){
+    // echo rand(0,255);
+    // echo '<br />';
+    // }
 ?>
