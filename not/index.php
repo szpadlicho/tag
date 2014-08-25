@@ -142,6 +142,7 @@ isset($_POST['confirm']) && !empty($_POST['rename']) ? $rec->changeName() : 'err
     }
     ?>
     </style>
+    <link rel="icon" type="image/png" href="favicon.png"/>
 </head>
 <body>
     <section id="site-place-holder">
