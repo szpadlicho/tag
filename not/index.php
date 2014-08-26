@@ -141,6 +141,9 @@ isset($_POST['confirm']) && !empty($_POST['rename']) ? $rec->changeName() : 'err
         #link-<?php echo $x; ?>{
             color: rgb(<?php echo $r; ?>,<?php echo $g; ?>,<?php echo $b; ?>);
         }
+        #link-<?php echo $x; ?>:hover{
+            color: rgb(<?php echo floor($r / 0.7); ?>,<?php echo floor($g / 0.7); ?>,<?php echo floor($b / 0.7); ?>);
+        }
     <?php
     }
     ?>
