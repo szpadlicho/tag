@@ -134,9 +134,9 @@ isset($_POST['confirm']) && !empty($_POST['rename']) ? $rec->changeName() : 'err
     <style type="text/css">
     <?php
     for($x=0; $x<$_SESSION['count']; $x++){
-        $r = rand(0,255);
-        $g = rand(0,255);
-        $b = rand(0,255);
+        $r = rand(70,255);
+        $g = rand(70,255);
+        $b = rand(70,255);
         ?>
         #link-<?php echo $x; ?>{
             color: rgb(<?php echo $r; ?>,<?php echo $g; ?>,<?php echo $b; ?>);

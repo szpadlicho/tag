@@ -50,10 +50,10 @@ body{
 a.link{
     font-size:2em;
     text-decoration:none;
-    #color:rgb(127,162,255);
+    color:rgb(127,162,255);
     margin-right:0.5em;
 }
-a.llink:hover{color:red;}
+a.link:hover{color:red;}
 a.link:visited{}
 .hidden{
     display:none;
