@@ -67,7 +67,10 @@ class Notatnik{
     {
         $i = 0;
         foreach($this->__getNameTab() as $wyn){
-                echo '<a id="link-'.$i++.'" class="link" href="?file='.$wyn.'">'.$wyn.'</a>';
+                $clear_int=explode('.', $wyn);
+                unset($clear_int[0]);
+                $clear_int=implode('.', $clear_int);
+                echo '<a id="link-'.$i++.'" class="link" href="?file='.$wyn.'">('.$clear_int.')</a>';
             }
     }
     function __getInt()
