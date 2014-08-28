@@ -1,4 +1,5 @@
 <?php
+header('Content-Type: text/html; charset=utf-8');
 session_start();
 // ini_set('xdebug.var_display_max_depth', -1);
 // ini_set('xdebug.var_display_max_children', -1);
