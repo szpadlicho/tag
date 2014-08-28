@@ -190,7 +190,7 @@ isset($_POST['logout_user']) ? $rec->userOut() : 'error4';
     //var_dump ($_POST);
     //var_dump ($_GET);
     //var_dump ($_SESSION);
-    var_dump ($_COOKIE);
+    //var_dump ($_COOKIE);
     // for($x=0; $x<$_SESSION['count']; $x++){
     // echo rand(0,255);
     // echo '<br />';
