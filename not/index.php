@@ -64,14 +64,14 @@ class Notatnik{
         return $dst;
     }
     function showName()
-    {
+    {       
         $i = 0;
         foreach($this->__getNameTab() as $wyn){
                 $clear_int=explode('.', $wyn);
                 unset($clear_int[0]);
                 $clear_int=implode('.', $clear_int);
                 echo '<a id="link-'.$i++.'" class="link" href="?file='.$wyn.'">('.$clear_int.')</a>';
-            }
+        }
     }
     function __getInt()
     {
@@ -84,12 +84,25 @@ class Notatnik{
         rename(dirname(__FILE__).'/data/'.$_GET['file'].'.txt', dirname(__FILE__).'/data/'.$this->__getInt().$_POST['rename'].'.txt');
         header('location: ?file='.$this->__getInt().$_POST['rename']);
     }
+    function userIn()
+    {   
+        $_POST['password'] == 'piotrek' ? setcookie('auth','yes',time()+3600*24) : 'password error';
+        header('location: ?file='.$_GET['file']);
+        
+    }
+    function userOut()
+    {   
+        setcookie ('auth', '', time() - 3600);
+        header('location:');
+    }
 }
 $rec = new Notatnik();
 !isset($_GET['file']) ? $_GET['file'] = '0.start' : $error = 'error' ;
 isset($_POST['save']) ? $rec->__setTXT($_GET['file'], $_POST['txt']) : 'error1';
 isset($_POST['add']) && !empty($_POST['new_name']) ? $rec->__setTXT($_SESSION['count'].'.'.$_POST['new_name'], '') : 'error2';
 isset($_POST['confirm']) && !empty($_POST['rename']) ? $rec->changeName() : 'error2';
+isset($_POST['login_user']) && !empty($_POST['password']) ? $rec->userIn() : 'error3';
+isset($_POST['logout_user']) ? $rec->userOut() : 'error4';
 ?>
 <!DOCTYPE HTML>
 <html lang="pl">
@@ -154,7 +167,7 @@ isset($_POST['confirm']) && !empty($_POST['rename']) ? $rec->changeName() : 'err
     <section id="site-place-holder">
         <span class="header">Notatnik</span >
         <form method="POST">
-            <?php echo $rec->showName(); ?>       
+            <?php echo isset($_COOKIE['auth']) ? $rec->showName() : '<input type="password" name="password" /><input type="submit" name="login_user" value="Zaloguj" />' ; ?>
             <input id="new" type="button" name="new" value="Nowy" />
             <input class="hidden" type="text" name="new_name" />
             <input class="hidden" type="submit" name="add" value="Dodaj" />
@@ -164,8 +177,9 @@ isset($_POST['confirm']) && !empty($_POST['rename']) ? $rec->changeName() : 'err
             <input class="hidden_sec" type="submit" name="confirm" value="Ok" />
         </form>
         <form method="POST">
-            <textarea class="txtarea" name="txt" ><?php echo $rec->__getTXT($_GET['file']); ?></textarea><br />
-            <input type="submit" name="save" value="Zapisz" />
+            <textarea class="txtarea" name="txt" ><?php echo isset($_COOKIE['auth']) ? $rec->__getTXT($_GET['file']) : 'Enter Password'; ?></textarea><br />
+            <input type="submit" name="save" value="Zapisz" /><!--DOpisany do JS-->            
+            <input type="submit" name="logout_user" value="Wyloguj" />
         </form>
     </section>
     <footer>
@@ -176,6 +190,7 @@ isset($_POST['confirm']) && !empty($_POST['rename']) ? $rec->changeName() : 'err
     //var_dump ($_POST);
     //var_dump ($_GET);
     //var_dump ($_SESSION);
+    var_dump ($_COOKIE);
     // for($x=0; $x<$_SESSION['count']; $x++){
     // echo rand(0,255);
     // echo '<br />';
