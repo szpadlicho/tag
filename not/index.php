@@ -63,6 +63,13 @@ class Notatnik{
         natsort($dst);
         return $dst;
     }
+    function __getCurentName()
+    {
+        $curent = explode('.', $_GET['file']);
+        unset($curent[0]);
+        $curent = implode('.', $curent);
+        return $curent;
+    }
     function showName()
     {       
         $i = 0;
@@ -173,7 +180,7 @@ isset($_POST['logout_user']) ? $rec->userOut() : 'error4';
             <input class="hidden" type="submit" name="add" value="Dodaj" />
             <input id="rename" type="button" name="change" value="Zmień" />           
             <span id='int' class="hidden_sec"><?php echo $rec->__getInt(); ?></span>
-            <input class="hidden_sec" type="text" name="rename" />
+            <input class="hidden_sec" type="text" name="rename" value="<?php echo $rec->__getCurentName(); ?>" />
             <input class="hidden_sec" type="submit" name="confirm" value="Ok" />
         </form>
         <form method="POST">
