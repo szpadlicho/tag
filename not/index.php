@@ -121,6 +121,7 @@ isset($_POST['logout_user']) ? $rec->userOut() : 'error4';
     <link rel="stylesheet" href="css/style.php">
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.5.2.js"></script>
     <script type="text/javascript">
+    <?php if(isset($_COOKIE['auth'])) { ?>
     (function($){
         $(document).ready(function()
         {
@@ -135,6 +136,7 @@ isset($_POST['logout_user']) ? $rec->userOut() : 'error4';
             });
         });
     })(jQuery);
+    <?php } ?>
     $(document).ready(function()
     {
         $('#new').click(function()
