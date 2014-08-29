@@ -10,7 +10,8 @@ class Notatnik{
 		//save data
 		fputs($fp, $zawartosc);
 		//close file
-		fclose($fp);	
+		fclose($fp);
+        setcookie('auth','yes',time()+3600*6);
 	}
 	function __getTXT($nazwa)
     {
@@ -93,7 +94,7 @@ class Notatnik{
     }
     function userIn()
     {   
-        $_POST['password'] == 'piotrek' ? setcookie('auth','yes',time()+3600*24) : 'password error';
+        $_POST['password'] == 'piotrek' ? setcookie('auth','yes',time()+3600*6) : 'password error';
         header('location: ?file='.$_GET['file']);
         
     }
@@ -131,7 +132,7 @@ isset($_POST['logout_user']) ? $rec->userOut() : 'error4';
                 $("form input[name=save]").click();
                 event.preventDefault();
                 return false;
-                alert('wow');
+                alert('save');
             });
         });
     })(jQuery);
