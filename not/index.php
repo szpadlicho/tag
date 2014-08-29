@@ -11,7 +11,6 @@ class Notatnik{
 		fputs($fp, $zawartosc);
 		//close file
 		fclose($fp);
-        setcookie('auth','yes',time()+3600*6);
 	}
 	function __getTXT($nazwa)
     {
@@ -94,7 +93,7 @@ class Notatnik{
     }
     function userIn()
     {   
-        $_POST['password'] == 'piotrek' ? setcookie('auth','yes',time()+3600*6) : 'password error';
+        $_POST['password'] == 'piotrek' ? setcookie('auth','yes',time()+3600*12) : 'password error';
         header('location: ?file='.$_GET['file']);
         
     }
