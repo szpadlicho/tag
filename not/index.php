@@ -84,7 +84,8 @@ class Notatnik{
     {   
         $tab = $this->__getNameTab();
         $i = 0;
-        foreach($tab[0] as $wyn){
+        $sort = (@$_COOKIE['sort']=='1') ? $tab[1] : $tab[0] ;
+        foreach($sort as $wyn){
                 $clear_int=explode('.', $wyn);
                 unset($clear_int[0]);
                 $clear_int=implode('.', $clear_int);
@@ -145,6 +146,11 @@ class Notatnik{
         //return $new_int;
         header('location: ?file=0.start');
     }
+    function __setSortMod($mod)
+    {
+        setcookie ('sort', $mod, time() + 3600*24*30);
+        header('location:');
+    }
 }
 $rec = new Notatnik();
 !isset($_GET['file']) ? $_GET['file'] = '0.start' : $error = 'error' ;
@@ -156,6 +162,8 @@ isset($_POST['logout_user']) ? $rec->userOut() : 'error4';
 $sort = $rec->__getNameTab();
 //var_dump($sort);
 isset($_POST['del_confirm']) ? $rec->deleteName() : 'error5';
+isset($_POST['sorting']) ? $rec->__setSortMod($_POST['sorting']) : 'error6';
+isset($_POST['setting']) ? header('location: setting.php') : 'error7';
 ?>
 <!DOCTYPE HTML>
 <html lang="pl">
@@ -187,15 +195,18 @@ isset($_POST['del_confirm']) ? $rec->deleteName() : 'error5';
         // Save when link clicked
         $('.link').click(function()
         {
-            $("form input[name=save]").click();      
+            $("form input[name=save]").click();
+            event.preventDefault();
+            return false;            
+            //alert('save');            
         });
     });
     $(document).ready(function()
     {
         // Save when logout
-        $('input[name=logout_user]').click(function()
+        $('input[name=sorting]').click(function()
         {
-            //$("form input[name=save]").click();      
+            $("form input[name=anuluj]").click();      
         });
     });
     <?php } ?>
@@ -265,7 +276,7 @@ isset($_POST['del_confirm']) ? $rec->deleteName() : 'error5';
             <textarea class="txtarea" name="txt" ><?php echo isset($_COOKIE['auth']) ? $rec->__getTXT($_GET['file']) : 'Enter Password'; ?></textarea><br />           
             <?php if(isset($_COOKIE['auth'])) { ?>
                 <input type="submit" name="save" value="Zapisz" /><!--DOpisany do JS-->
-                <span id="bottom">
+                <span class="bottom">
                     <input id="new" type="button" name="new" value="Nowy" />
                     <input class="hidden" type="text" name="new_name" />
                     <input class="hidden" type="submit" name="add" value="Dodaj" />
@@ -280,7 +291,13 @@ isset($_POST['del_confirm']) ? $rec->deleteName() : 'error5';
                     <input class="del_confirm" type="submit" name="del_confirm" value="Tak" />
                     <input class="del_confirm" type="submit" name="anuluj" value="Nie" />
                 </span>
+                <span class="bottom">
+                    Sortowanie :
+                    <label><input class="radio" type="radio" <?php echo (@$_COOKIE['sort']=='0') ? 'checked="checked"' : '';  ?> name="sorting" value="0" /><label>Kolejność tworzenia</label></label>
+                    <label><input class="radio" type="radio" <?php echo (@$_COOKIE['sort']=='1') ? 'checked="checked"' : '';  ?> name="sorting" value="1" /><label>Alfabetycznie</label></label>
+                </span>
                 <input class="right" type="submit" name="logout_user" value="Wyloguj" />
+                <input id="setting" class="right" type="submit" name="setting" value="Ustawienia" />
             <?php } ?>
         </form>
     </section>

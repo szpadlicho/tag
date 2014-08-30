@@ -67,6 +67,21 @@ a.link:visited{}
 .right{
     float:right;
 }
-#bottom{
+.bottom{
     padding-left:10em;
+}
+#setting{
+    margin-right:5em;
+}
+.radio{
+    display:none;
+}
+label{
+    padding:0 1em;
+}
+.radio + label{
+    color:red;
+}
+.radio:checked  + label{
+    color:green;
 }
