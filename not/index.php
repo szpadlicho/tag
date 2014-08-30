@@ -81,9 +81,10 @@ class Notatnik{
         return $curent;
     }
     function showName()
-    {       
+    {   
+        $tab = $this->__getNameTab();
         $i = 0;
-        foreach($this->__getNameTab()[0] as $wyn){
+        foreach($tab[0] as $wyn){
                 $clear_int=explode('.', $wyn);
                 unset($clear_int[0]);
                 $clear_int=implode('.', $clear_int);
