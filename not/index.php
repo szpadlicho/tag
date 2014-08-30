@@ -43,7 +43,7 @@ class Notatnik{
         // directory files data base
         $dir = dirname(__FILE__).'/data/';
         $arr = scandir($dir);
-        $dst = array();
+        $sort_n = array();
         foreach($arr as $file){
             $src = new SplFileInfo($file);
             //get only extension of file
@@ -53,15 +53,25 @@ class Notatnik{
                 //get only file name
                 $name = $src->getBasename('.txt');
                 //add file name to array
-                $dst[] .= $name;
+                $sort_n[] .= $name;
             }
         }
-        $_SESSION['count'] = count($dst);
-        //natural sort arra like 9,10
-        //sort($dst, SORT_NATURAL);
-        //same as up but neww
-        natsort($dst);
-        return $dst;
+        $_SESSION['count'] = count($sort_n);
+        //sortowanie numerycznie
+        usort($sort_n, 'strnatcasecmp');
+        //sortowanie alfabetycznie  
+        $wyn = array();
+        foreach($sort_n as $un){
+            $un = explode('.', $un);
+            $wyn[] .= $un[1].'.'.$un[0];            
+        }
+        usort($wyn, 'strnatcasecmp');
+        $sort_a=array();
+        foreach($wyn as $un){
+            $un = explode('.', $un);
+            $sort_a[] .= $un[1].'.'.$un[0];            
+        }        
+        return array($sort_n,$sort_a);
     }
     function __getCurentName()
     {
@@ -73,7 +83,7 @@ class Notatnik{
     function showName()
     {       
         $i = 0;
-        foreach($this->__getNameTab() as $wyn){
+        foreach($this->__getNameTab()[0] as $wyn){
                 $clear_int=explode('.', $wyn);
                 unset($clear_int[0]);
                 $clear_int=implode('.', $clear_int);
@@ -88,8 +98,8 @@ class Notatnik{
     }
     function changeName()
     {   
-        rename(dirname(__FILE__).'/data/'.$_GET['file'].'.txt', dirname(__FILE__).'/data/'.$this->__getInt().$_POST['rename'].'.txt');
-        header('location: ?file='.$this->__getInt().$_POST['rename']);
+        rename(dirname(__FILE__).'/data/'.$_GET['file'].'.txt', dirname(__FILE__).'/data/'.$this->__getInt().(str_replace('.', ',', $_POST['rename'])).'.txt');
+        header('location: ?file='.$this->__getInt().(str_replace('.', ',', $_POST['rename'])));
     }
     function userIn()
     {   
@@ -100,16 +110,51 @@ class Notatnik{
     function userOut()
     {   
         setcookie ('auth', '', time() - 3600);
+        $this->__setTXT($_GET['file'], $_POST['txt']);
         header('location:');
+    }
+    function deleteName()
+    {
+        unlink('data/'.$_GET['file'].'.txt');
+        $dir = dirname(__FILE__).'/data/';
+        $arr = scandir($dir);
+        $sort_n = array();
+        foreach($arr as $file){
+            $src = new SplFileInfo($file);
+            //get only extension of file
+            $ext = $src->getExtension();
+            if($file != '.' && $file != '..' && !is_dir($file) && $ext !='php')
+            {
+                //get only file name
+                $name = $src->getBasename('.txt');
+                //add file name to array
+                $sort_n[] .= $name;
+            }
+        }        
+        usort($sort_n, 'strnatcasecmp');
+        $i = 0;
+        $new_int = array();
+        foreach($sort_n as $pices){
+            $name = explode('.', $pices);
+            $add_int = $i.'.'.$name[1];
+            $new_int[] .= $add_int;
+            rename('data/'.$pices.'.txt', 'data/'.$i.'.'.$name[1].'.txt');
+            $i++;
+        }
+        //return $new_int;
+        header('location: ?file=0.start');
     }
 }
 $rec = new Notatnik();
 !isset($_GET['file']) ? $_GET['file'] = '0.start' : $error = 'error' ;
 isset($_POST['save']) ? $rec->__setTXT($_GET['file'], $_POST['txt']) : 'error1';
-isset($_POST['add']) && !empty($_POST['new_name']) ? $rec->__setTXT($_SESSION['count'].'.'.$_POST['new_name'], '') : 'error2';
+isset($_POST['add']) && !empty($_POST['new_name']) ? $rec->__setTXT($_SESSION['count'].'.'.(str_replace('.', ',', $_POST['new_name'])), '') : 'error2';
 isset($_POST['confirm']) && !empty($_POST['rename']) ? $rec->changeName() : 'error2';
 isset($_POST['login_user']) && !empty($_POST['password']) ? $rec->userIn() : 'error3';
 isset($_POST['logout_user']) ? $rec->userOut() : 'error4';
+$sort = $rec->__getNameTab();
+//var_dump($sort);
+isset($_POST['del_confirm']) ? $rec->deleteName() : 'error5';
 ?>
 <!DOCTYPE HTML>
 <html lang="pl">
@@ -136,11 +181,30 @@ isset($_POST['logout_user']) ? $rec->userOut() : 'error4';
             });
         });
     })(jQuery);
+    $(document).ready(function()
+    {
+        // Save when link clicked
+        $('.link').click(function()
+        {
+            $("form input[name=save]").click();      
+        });
+    });
+    $(document).ready(function()
+    {
+        // Save when logout
+        $('input[name=logout_user]').click(function()
+        {
+            //$("form input[name=save]").click();      
+        });
+    });
     <?php } ?>
     $(document).ready(function()
     {
         $('#new').click(function()
         {
+            $('#new').css({'display':'none'});
+            $('#rename').css({'display':'none'});
+            $('#del').css({'display':'none'});
             $('.hidden').css({'display':'inline'});        
         });
     });
@@ -148,7 +212,20 @@ isset($_POST['logout_user']) ? $rec->userOut() : 'error4';
     {
         $('#rename').click(function()
         {
-            $('.hidden_sec').css({'display':'inline'});        
+            $('#new').css({'display':'none'});
+            $('#rename').css({'display':'none'});
+            $('#del').css({'display':'none'});
+            $('.hidden_sec').css({'display':'inline'});     
+        });
+    });
+    $(document).ready(function()
+    {
+        $('#del').click(function()
+        {
+            $('#new').css({'display':'none'});
+            $('#rename').css({'display':'none'});
+            $('#del').css({'display':'none'});
+            $('.del_confirm').css({'display':'inline'});       
         });
     });
     </script>          
@@ -176,19 +253,34 @@ isset($_POST['logout_user']) ? $rec->userOut() : 'error4';
     <section id="site-place-holder">
         <span class="header">Notatnik</span >
         <form method="POST">
-            <?php echo isset($_COOKIE['auth']) ? $rec->showName() : '<input type="password" name="password" /><input type="submit" name="login_user" value="Zaloguj" />' ; ?>
-            <input id="new" type="button" name="new" value="Nowy" />
-            <input class="hidden" type="text" name="new_name" />
-            <input class="hidden" type="submit" name="add" value="Dodaj" />
-            <input id="rename" type="button" name="change" value="Zmień" />           
-            <span id='int' class="hidden_sec"><?php echo $rec->__getInt(); ?></span>
-            <input class="hidden_sec" type="text" name="rename" value="<?php echo $rec->__getCurentName(); ?>" />
-            <input class="hidden_sec" type="submit" name="confirm" value="Ok" />
+            <?php if(isset($_COOKIE['auth'])) 
+            { 
+                $rec->showName();
+            } else { ?>
+                <input type="password" name="password" /><input type="submit" name="login_user" value="Zaloguj" />
+            <?php } ?>          
         </form>
         <form method="POST">
-            <textarea class="txtarea" name="txt" ><?php echo isset($_COOKIE['auth']) ? $rec->__getTXT($_GET['file']) : 'Enter Password'; ?></textarea><br />
-            <input type="submit" name="save" value="Zapisz" /><!--DOpisany do JS-->            
-            <input type="submit" name="logout_user" value="Wyloguj" />
+            <textarea class="txtarea" name="txt" ><?php echo isset($_COOKIE['auth']) ? $rec->__getTXT($_GET['file']) : 'Enter Password'; ?></textarea><br />           
+            <?php if(isset($_COOKIE['auth'])) { ?>
+                <input type="submit" name="save" value="Zapisz" /><!--DOpisany do JS-->
+                <span id="bottom">
+                    <input id="new" type="button" name="new" value="Nowy" />
+                    <input class="hidden" type="text" name="new_name" />
+                    <input class="hidden" type="submit" name="add" value="Dodaj" />
+                    <input class="hidden" type="submit" name="anuluj" value="Anuluj" />
+                    <input id="rename" type="button" name="change" value="Zmień" />           
+                    <span id='int' class="hidden_sec"><?php echo $rec->__getInt(); ?></span>
+                    <input class="hidden_sec" type="text" name="rename" value="<?php echo $rec->__getCurentName(); ?>" />
+                    <input class="hidden_sec" type="submit" name="confirm" value="Ok" />
+                    <input class="hidden_sec" type="submit" name="anuluj" value="Anuluj" />
+                    <input id="del" type="button" name="del" value="Usuń" />
+                    <span class="del_confirm">Na pewno ?</span>
+                    <input class="del_confirm" type="submit" name="del_confirm" value="Tak" />
+                    <input class="del_confirm" type="submit" name="anuluj" value="Nie" />
+                </span>
+                <input class="right" type="submit" name="logout_user" value="Wyloguj" />
+            <?php } ?>
         </form>
     </section>
     <footer>

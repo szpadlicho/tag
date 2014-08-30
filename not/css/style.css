@@ -61,3 +61,12 @@ a.link:visited{}
 .hidden_sec{
     display:none;
 }
+.del_confirm{
+    display:none;
+}
+.right{
+    float:right;
+}
+#bottom{
+    padding-left:10em;
+}
