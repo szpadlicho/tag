@@ -17,6 +17,10 @@ body{
 	#overflow-x:hidden;
 	#background: linear-gradient(to right, rgba(137,182,24,1) 0%,rgba(210,209,204,1) 80%);
 	font-family: 'Titillium Web', sans-serif;
+    background:#1b1e1e url('../images/bg.jpg') repeat fixed;
+    #color:#1b1e1e;
+    #font:normal 120%/2rem Lato,Verdana,Arial,sans-serif;
+    #height:100%
 }
 #site-place-holder{
     position:relative;
@@ -27,6 +31,12 @@ body{
 .txtarea{
     width:99%;
     height:55em;
+    #display:none;
+    background: rgba(255,255,255,0.2);
+    #color:rgb(255,166,121);
+    color:white;
+    #color:black;
+    padding:0 0.7em;
 }
 .header{
     text-align:center;
