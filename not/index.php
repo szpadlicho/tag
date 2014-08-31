@@ -183,7 +183,7 @@ isset($_POST['setting']) ? header('location: setting.php') : 'error7';
             $(window).keypress(function(event)
             {
                 if (!(event.which == 115 && event.ctrlKey) && !(event.which == 19)) return true;
-                $("form input[name=save]").click();
+                $('form input[name=save]').click();
                 event.preventDefault();
                 return false;
                 alert('save');
@@ -194,19 +194,34 @@ isset($_POST['setting']) ? header('location: setting.php') : 'error7';
     {
         // Save when link clicked
         $('.link').click(function()
-        {
+        {     
             $("form input[name=save]").click();
             event.preventDefault();
             return false;            
             //alert('save');            
         });
+        // $('.link').click(function(event){
+            // var get = '<?php echo $_GET['file']; ?>';
+            // $.ajax({
+                // async: false,
+                // url: 'index.php',
+                // type: 'POST',
+                // data: {
+                    // save: 'lol',
+                    // text: 'looooool'
+                // },
+                // success: function( data ) {
+                    // window.location = $(this).attr('href');         
+                // }
+            // });
+        // });
     });
     $(document).ready(function()
     {
-        // Save when logout
+        // Save when sorting change
         $('input[name=sorting]').click(function()
         {
-            $("form input[name=anuluj]").click();      
+            $("form input[name=anuluj]").click();//anuluj tylko po to by odświeżyć strone     
         });
     });
     <?php } ?>
@@ -306,8 +321,8 @@ isset($_POST['setting']) ? header('location: setting.php') : 'error7';
 </body>
 </html>
 <?php
-    //var_dump ($_POST);
-    //var_dump ($_GET);
+    var_dump ($_POST);
+    var_dump ($_GET);
     //var_dump ($_SESSION);
     //var_dump ($_COOKIE);
     // for($x=0; $x<$_SESSION['count']; $x++){
