@@ -193,28 +193,27 @@ isset($_POST['setting']) ? header('location: setting.php') : 'error7';
     $(document).ready(function()
     {
         // Save when link clicked
-        $('.link').click(function()
-        {     
-            $("form input[name=save]").click();
-            event.preventDefault();
-            return false;            
+        //$('.link').click(function()
+        //{     
+            //$("form input[name=save]").click();
+            //event.preventDefault();
+            //return false;            
             //alert('save');            
+        //});
+        $('.link').click(function()
+        {
+            // Save when link clicked
+            var txt = jQuery(".txtarea").val();
+            //alert(txt);
+            var get = <?php echo json_encode($_GET['file']); ?>;
+            //alert(get);
+            $.ajax({ 
+              async: false,
+              type: 'POST', 
+              url: 'save.php',
+              data: {text : txt, file : get}
+            });
         });
-        // $('.link').click(function(event){
-            // var get = '<?php echo $_GET['file']; ?>';
-            // $.ajax({
-                // async: false,
-                // url: 'index.php',
-                // type: 'POST',
-                // data: {
-                    // save: 'lol',
-                    // text: 'looooool'
-                // },
-                // success: function( data ) {
-                    // window.location = $(this).attr('href');         
-                // }
-            // });
-        // });
     });
     $(document).ready(function()
     {
@@ -321,8 +320,8 @@ isset($_POST['setting']) ? header('location: setting.php') : 'error7';
 </body>
 </html>
 <?php
-    var_dump ($_POST);
-    var_dump ($_GET);
+    //var_dump ($_POST);
+    //var_dump ($_GET);
     //var_dump ($_SESSION);
     //var_dump ($_COOKIE);
     // for($x=0; $x<$_SESSION['count']; $x++){
