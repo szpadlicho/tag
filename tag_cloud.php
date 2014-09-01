@@ -110,7 +110,7 @@ $text=preg_replace('/(\s)\s*/', '\\1', trim($text));//usuwam zbedne spacje z tex
 <meta charset="UTF-8">
     <title>Tag Cloud by Dutedraku</title>
     <?php include ("meta5.html"); ?>
-	<link title="deafult" rel="stylesheet" type="text/css" href="tag_cloud.css"/>
+	<link title="deafult" rel="stylesheet" type="text/css" href="css/style.css"/>
 </head>
 <body>
 	<div id="place-holder">

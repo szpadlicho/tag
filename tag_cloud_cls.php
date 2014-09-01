@@ -159,9 +159,9 @@ class TagCloudCls{
                 //$r = 152; 
                 //$g = 76;
                 //$b = floor( 255 * ($frequency / $tmax) );// 255* (4 / 10) =255* 0,4 = 102 = floor 102
-                $r = rand(0,255);
-                $g = rand(0,255);
-                $b = rand(0,255);
+                $r = rand(70,255);
+                $g = rand(70,255);
+                $b = rand(70,255);
                 
                 //if($font_size <= 50 && $font_size >= 30){ $r = floor( 255 * ($frequency / $tmax) * 1.5 ); } else { $r = 152; }
                 //if($font_size <= 60 && $font_size >= 20){ $g = floor( 255 * ($frequency / $tmax) / 1.1 ); } else { $g = 128; }
@@ -210,9 +210,9 @@ class TagCloudCls{
                 //$r = 152; 
                 //$g = 76;
                 //$b = floor( 255 * ($frequency / $tmax) );// 255* (4 / 10) =255* 0,4 = 102 = floor 102
-                $r = rand(0,255);
-                $g = rand(0,255);
-                $b = rand(0,255);
+                $r = rand(70,255);
+                $g = rand(70,255);
+                $b = rand(70,255);
                 
                 //if($font_size <= 50 && $font_size >= 30){ $r = floor( 255 * ($frequency / $tmax) * 1.5 ); } else { $r = 152; }
                 //if($font_size <= 60 && $font_size >= 20){ $g = floor( 255 * ($frequency / $tmax) / 1.1 ); } else { $g = 128; }
