@@ -11,6 +11,7 @@ class Notatnik{
 		fputs($fp, $zawartosc);
 		//close file
 		fclose($fp);
+        chmod('data/'.$nazwa.'.txt', 0777);//dla servera linux dostep
 	}
 	function __getTXT($nazwa)
     {
@@ -151,8 +152,23 @@ class Notatnik{
         setcookie ('sort', $mod, time() + 3600*24*30);
         header('location:');
     }
+    function createDir()
+    {
+        if(!is_dir('data'))
+        {
+            @mkdir('data');
+            chmod('data', 0777);
+            //exec ("find /data -type d -exec chmod 0750 {} +");
+            //find -type f -exec chmod 600 {} \;
+            $this->__setTXT('0.start','');
+            //exec("chmod 0777 /data/*.txt");
+            //exec ("find /data -type f -exec chmod 0777 {} +");
+        } 
+        
+    }
 }
 $rec = new Notatnik();
+$rec->createDir();
 !isset($_GET['file']) ? $_GET['file'] = '0.start' : $error = 'Utworz nowy plik' ;
 isset($_POST['save']) ? $rec->__setTXT($_GET['file'], $_POST['txt']) : 'error1';
 isset($_POST['add']) && !empty($_POST['new_name']) ? $rec->__setTXT($_SESSION['count'].'.'.(str_replace('.', ',', $_POST['new_name'])), '') : 'error2';
