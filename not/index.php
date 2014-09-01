@@ -153,7 +153,7 @@ class Notatnik{
     }
 }
 $rec = new Notatnik();
-!isset($_GET['file']) ? $_GET['file'] = '0.start' : $error = 'error' ;
+!isset($_GET['file']) ? $_GET['file'] = '0.start' : $error = 'Utworz nowy plik' ;
 isset($_POST['save']) ? $rec->__setTXT($_GET['file'], $_POST['txt']) : 'error1';
 isset($_POST['add']) && !empty($_POST['new_name']) ? $rec->__setTXT($_SESSION['count'].'.'.(str_replace('.', ',', $_POST['new_name'])), '') : 'error2';
 isset($_POST['confirm']) && !empty($_POST['rename']) ? $rec->changeName() : 'error2';
@@ -328,4 +328,5 @@ isset($_POST['setting']) ? header('location: setting.php') : 'error7';
     // echo rand(0,255);
     // echo '<br />';
     // }
+    echo $_SESSION['count'];
 ?>
