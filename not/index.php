@@ -182,10 +182,9 @@ isset($_POST['add']) && !empty($_POST['new_name']) ? $rec->__setTXT($_SESSION['c
 isset($_POST['confirm']) && !empty($_POST['rename']) ? $rec->changeName() : 'error2';
 isset($_POST['login_user']) && !empty($_POST['password']) ? $rec->userIn() : 'error3';
 isset($_POST['logout_user']) ? $rec->userOut() : 'error4';
-$sort = $rec->__getNameTab();
+//$sort = $rec->__getNameTab();
 //var_dump($sort);
 isset($_POST['del_confirm']) ? $rec->deleteName() : 'error5';
-//isset($_POST['sorting']) ? $rec->__setSortMod($_POST['sorting']) : 'error6';
 isset($_POST['setting']) ? header('location: setting.php') : 'error7';
 ?>
 <!DOCTYPE HTML>
@@ -216,14 +215,6 @@ isset($_POST['setting']) ? header('location: setting.php') : 'error7';
     })(jQuery);
     $(document).ready(function()
     {
-        // Save when link clicked
-        //$('.link').click(function()
-        //{     
-            //$("form input[name=save]").click();
-            //event.preventDefault();
-            //return false;            
-            //alert('save');            
-        //});
         $('.link').click(function()
         {
             // Save when link clicked
@@ -246,7 +237,7 @@ isset($_POST['setting']) ? header('location: setting.php') : 'error7';
         {
             // Set cookie when sorting click
             var mod = $(this).val();
-            alert(mod);
+            //alert(mod);
             $.ajax({ 
                 async: false,
                 type: 'POST', 
