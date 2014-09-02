@@ -1,5 +1,6 @@
 <?php
-class Setting{
+class Setting
+{
     function __setSortMod($mod)
     {
         setcookie ('sort', $mod, time() + 3600*24*30);

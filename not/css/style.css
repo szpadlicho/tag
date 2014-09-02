@@ -31,7 +31,7 @@ body{
 }
 .txtarea{
     width:99%;
-    height:55em;
+    height:50em;
     #display:none;
     background: rgba(255,255,255,0.2);
     #color:rgb(255,166,121);
@@ -96,4 +96,99 @@ label{
 }
 .radio:checked  + label{
     color:green;
+}
+/*Neon*/
+@font-face {
+  font-family: 'Vampiro One';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Vampiro One'), local('VampiroOne-Regular'), url(http://themes.googleusercontent.com/static/fonts/vampiroone/v3/Ho2Xld8UbQyBA8XLxF1_NYbN6UDyHWBl620a-IRfuBk.woff) format('woff');
+}
+p.neon:nth-child(1){
+    display:none;
+    text-align:center;
+    font-size:4em;
+    margin:20px 0 20px 0;
+    position:absolute;
+    z-index:-1;
+    top:70%;
+    left:70%;
+}
+p.neon:nth-child(1){
+    color:#BA01FF;
+    #color:#ffffff;
+    text-shadow: inset 10 10 10px #fff;
+    font-family:Vampiro One;
+    #-webkit-transition: text-shadow 0.5s;
+    #-moz-transition: text-shadow 0.5s;
+    #transition: text-shadow 0.5s;
+    -webkit-animation: neon6 1.5s ease-in-out infinite alternate;
+    -moz-animation: neon6 1.5s ease-in-out infinite alternate;
+    animation: neon6 1.5s ease-in-out infinite alternate;
+}
+@-moz-keyframes neon6 {
+    from {
+        text-shadow: 0 0 10px #fff,
+                   0 0 20px #fff,
+                   0 0 30px #fff,
+                   0 0 40px #ff00de,
+                   0 0 70px #ff00de,
+                   0 0 80px #ff00de,
+                   0 0 100px #ff00de,
+                   0 0 150px #ff00de;
+    }
+    to {
+        text-shadow: 0 0 5px #fff,
+                   0 0 10px #fff,
+                   0 0 15px #fff,
+                   0 0 20px #ff00de,
+                   0 0 35px #ff00de,
+                   0 0 40px #ff00de,
+                   0 0 50px #ff00de,
+                   0 0 75px #ff00de;
+    }
+}
+@-webkit-keyframes neon6 {
+    from {
+        text-shadow: 0 0 10px #fff,
+                   0 0 20px #fff,
+                   0 0 30px #fff,
+                   0 0 40px #ff00de,
+                   0 0 70px #ff00de,
+                   0 0 80px #ff00de,
+                   0 0 100px #ff00de,
+                   0 0 150px #ff00de;
+    }
+    to {
+        text-shadow: 0 0 5px #fff,
+                   0 0 10px #fff,
+                   0 0 15px #fff,
+                   0 0 20px #ff00de,
+                   0 0 35px #ff00de,
+                   0 0 40px #ff00de,
+                   0 0 50px #ff00de,
+                   0 0 75px #ff00de;
+    }
+}
+@keyframes neon6 {
+    from {
+        text-shadow: 0 0 10px #fff,
+                   0 0 20px #fff,
+                   0 0 30px #fff,
+                   0 0 40px #ff00de,
+                   0 0 70px #ff00de,
+                   0 0 80px #ff00de,
+                   0 0 100px #ff00de,
+                   0 0 150px #ff00de;
+    }
+    to {
+        text-shadow: 0 0 5px #fff,
+                   0 0 10px #fff,
+                   0 0 15px #fff,
+                   0 0 20px #ff00de,
+                   0 0 35px #ff00de,
+                   0 0 40px #ff00de,
+                   0 0 50px #ff00de,
+                   0 0 75px #ff00de;
+    }
 }

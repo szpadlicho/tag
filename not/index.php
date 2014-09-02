@@ -3,7 +3,8 @@ error_reporting(E_STRICT | E_ALL);
 ini_set("display_errors",1);
 header('Content-Type: text/html; charset=utf-8');
 session_start();
-class Notatnik{
+class Notatnik
+{
 	public function __setTXT($nazwa, $zawartosc)
     {
 		$file = 'data/'.$nazwa.'.txt';
@@ -18,26 +19,21 @@ class Notatnik{
 	public function __getTXT($nazwa)
     {
 		$file = 'data/'.$nazwa.'.txt';
-		if(file_exists($file))
-        {	
+		if(file_exists($file)) {	
 			//open file
 			$fp = fopen($file, 'r');
 			//check size
             $size = filesize($file);
-            if($size > 0 )
-            {
+            if($size > 0 ) {
                 //read file
                 $dane = fread($fp, $size);
                 //close file
                 fclose($fp);
                 return $dane;
-            }
-            else
-            {
+            } else {
                 return 'pusty';
             }
-		}
-		else{
+		} else {
 			return 'error';
 		}
 	}
@@ -51,8 +47,7 @@ class Notatnik{
             $src = new SplFileInfo($file);
             //get only extension of file
             $ext = $src->getExtension();
-            if($file != '.' && $file != '..' && !is_dir($file) && $ext !='php')
-            {
+            if($file != '.' && $file != '..' && !is_dir($file) && $ext !='php') {
                 //get only file name
                 $name = $src->getBasename('.txt');
                 //add file name to array
@@ -124,9 +119,9 @@ class Notatnik{
         //header('Refresh:0; url='.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].'?file='.$new);
         //
         //ob_start();
-        //header('Refresh:0; url='.$_SERVER['PHP_SELF'].'?file='.$new.'&asd=asd');
+        header('Refresh:0; url='.$_SERVER['PHP_SELF'].'?file='.$new);
         //ob_end_flush();
-        echo("<script>location.href = 'index.php?file=".$new."';</script>");
+        //echo("<script>location.href = 'index.php?file=".$new."';</script>");
     }
     public function deleteName()
     {
@@ -138,8 +133,7 @@ class Notatnik{
             $src = new SplFileInfo($file);
             //get only extension of file
             $ext = $src->getExtension();
-            if($file != '.' && $file != '..' && !is_dir($file) && $ext !='php')
-            {
+            if($file != '.' && $file != '..' && !is_dir($file) && $ext !='php') {
                 //get only file name
                 $name = $src->getBasename('.txt');
                 //add file name to array
@@ -158,18 +152,17 @@ class Notatnik{
         }
         //return $new_int;
         //header('location: ?file=0.Start');     
-        //header('Refresh:0; url='.$_SERVER['PHP_SELF'].'?file=0.Start'); 
-        echo("<script>location.href = 'index.php?file=0.start';</script>");
+        header('Refresh:0; url='.$_SERVER['PHP_SELF']); 
+        //echo("<script>location.href = 'index.php?file=0.start';</script>");
     }
-    public function __setSortMod($mod)
-    {
-        setcookie ('sort', $mod, time() + 3600*24*30);
-        header('location:');
-    }
+    // public function __setSortMod($mod)
+    // {
+        // setcookie ('sort', $mod, time() + 3600*24*30);
+        // //header('location:');
+    // }
     public function createDir()
     {
-        if(!is_dir('data'))
-        {
+        if(!is_dir('data')) {
             @mkdir('data');
             chmod('data', 0777);
             //exec ("find /data -type d -exec chmod 0750 {} +");
@@ -192,7 +185,7 @@ isset($_POST['logout_user']) ? $rec->userOut() : 'error4';
 $sort = $rec->__getNameTab();
 //var_dump($sort);
 isset($_POST['del_confirm']) ? $rec->deleteName() : 'error5';
-isset($_POST['sorting']) ? $rec->__setSortMod($_POST['sorting']) : 'error6';
+//isset($_POST['sorting']) ? $rec->__setSortMod($_POST['sorting']) : 'error6';
 isset($_POST['setting']) ? header('location: setting.php') : 'error7';
 ?>
 <!DOCTYPE HTML>
@@ -206,11 +199,12 @@ isset($_POST['setting']) ? header('location: setting.php') : 'error7';
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.5.2.js"></script>
     <script type="text/javascript">
     <?php if(isset($_COOKIE['auth'])) { ?>
-    (function($){
-        $(document).ready(function()
+    (function($)
+    {
+        $(document).ready(function() 
         {
             // Save Form alt+s
-            $(window).keypress(function(event)
+            $(window).keypress(function(event) 
             {
                 if (!(event.which == 115 && event.ctrlKey) && !(event.which == 19)) return true;
                 $('form input[name=save]').click();
@@ -238,10 +232,10 @@ isset($_POST['setting']) ? header('location: setting.php') : 'error7';
             var get = <?php echo json_encode($_GET['file']); ?>;
             //alert(get);
             $.ajax({ 
-              async: false,
-              type: 'POST', 
-              url: 'save.php',
-              data: {text : txt, file : get}
+                async: false,
+                type: 'POST', 
+                url: 'save.php',
+                data: {text : txt, file : get}
             });
         });
     });
@@ -250,6 +244,15 @@ isset($_POST['setting']) ? header('location: setting.php') : 'error7';
         // Save when sorting change
         $('input[name=sorting]').click(function()
         {
+            // Set cookie when sorting click
+            var mod = $(this).val();
+            alert(mod);
+            $.ajax({ 
+                async: false,
+                type: 'POST', 
+                url: 'setcookie.php',
+                data: {value : mod}
+            });
             $("form input[name=anuluj]").click();//anuluj tylko po to by odświeżyć strone     
         });
     });
@@ -307,10 +310,9 @@ isset($_POST['setting']) ? header('location: setting.php') : 'error7';
 </head>
 <body>
     <section id="site-place-holder">
-        <span class="header">Notatnik</span >
+        <p class="neon">Notatnik</p>
         <form method="POST">
-            <?php if(isset($_COOKIE['auth'])) 
-            { 
+            <?php if(isset($_COOKIE['auth'])) { 
                 $rec->showName();
             } else { ?>
                 <input type="password" name="password" /><input type="submit" name="login_user" value="Zaloguj" />
