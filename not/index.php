@@ -192,7 +192,7 @@ isset($_POST['logout_user']) ? $rec->userOut() : 'error4';
 $sort = $rec->__getNameTab();
 //var_dump($sort);
 isset($_POST['del_confirm']) ? $rec->deleteName() : 'error5';
-isset($_POST['sorting']) ? $rec->__setSortMod($_POST['sorting']) : 'error6';
+//isset($_POST['sorting']) ? $rec->__setSortMod($_POST['sorting']) : 'error6';
 isset($_POST['setting']) ? header('location: setting.php') : 'error7';
 ?>
 <!DOCTYPE HTML>
