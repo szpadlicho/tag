@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_STRICT | E_ALL);
+ini_set("display_errors",1);
 header('Content-Type: text/html; charset=utf-8');
 session_start();
 class Notatnik{
@@ -11,7 +13,7 @@ class Notatnik{
 		fputs($fp, $zawartosc);
 		//close file
 		fclose($fp);
-        chmod('data/'.$nazwa.'.txt', 0777);//dla servera linux dostep
+        chmod($file, 0777);//dla servera linux dostep
 	}
 	function __getTXT($nazwa)
     {
@@ -99,11 +101,6 @@ class Notatnik{
         $int = explode('.',$_GET['file']);
         return $int[0].'.';
     }
-    function changeName()
-    {   
-        rename(dirname(__FILE__).'/data/'.$_GET['file'].'.txt', dirname(__FILE__).'/data/'.$this->__getInt().(str_replace('.', ',', $_POST['rename'])).'.txt');
-        header('location: ?file='.$this->__getInt().(str_replace('.', ',', $_POST['rename'])));
-    }
     function userIn()
     {   
         $_POST['password'] == 'piotrek' ? setcookie('auth','yes',time()+3600*12) : 'password error';
@@ -115,6 +112,16 @@ class Notatnik{
         setcookie ('auth', '', time() - 3600);
         $this->__setTXT($_GET['file'], $_POST['txt']);
         header('location:');
+    }
+    function changeName()
+    {   
+        $new = $this->__getInt().(str_replace('.', ',', $_POST['rename']));
+        rename(dirname(__FILE__).'/data/'.$_GET['file'].'.txt', dirname(__FILE__).'/data/'.$new.'.txt');
+        //header('location: ?file='.$new);
+        //header('Location'.$_SERVER['PHP_SELF'].'?file='.$new);
+        header('Refresh:0; url='.$_SERVER['PHP_SELF'].'?file='.$new);
+        //header('Refresh:0; url='.$_SERVER['REQUEST_URI'].'?file='.$new);
+        //header('Refresh:0; url='.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].'?file='.$new);
     }
     function deleteName()
     {
@@ -145,7 +152,12 @@ class Notatnik{
             $i++;
         }
         //return $new_int;
-        header('location: ?file=0.start');
+        //header('location: ?file=0.Start');
+        //header('Location: '.$_SERVER['PHP_SELF'].'?file=0.Start');
+        
+        header('Refresh:0; url='.$_SERVER['PHP_SELF'].'?file=0.Start'); 
+        //header('Refresh:0; url='.$_SERVER['REQUEST_URI'].'?file=0.Start'); 
+        //header('Refresh:0; url='.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].'?file=0.Start'); 
     }
     function __setSortMod($mod)
     {
