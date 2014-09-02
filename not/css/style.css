@@ -20,7 +20,8 @@ body{
     background:#1b1e1e url('../images/bg.jpg') repeat fixed;
     #color:#1b1e1e;
     #font:normal 120%/2rem Lato,Verdana,Arial,sans-serif;
-    #height:100%
+    #height:100%;
+    color: white;
 }
 #site-place-holder{
     position:relative;

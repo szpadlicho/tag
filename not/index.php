@@ -120,7 +120,9 @@ class Notatnik{
         //header('location: ?file='.$new);
         //header('Location'.$_SERVER['PHP_SELF'].'?file='.$new);
         //$_GET['file'] = $new;
+        //ob_start();
         header('Refresh:0; url='.$_SERVER['PHP_SELF'].'?file='.$new.'&asd=asd');
+        //ob_end_flush();
         //header('Refresh:0; url='.$_SERVER['REQUEST_URI'].'?file='.$new);
         //header('Refresh:0; url='.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].'?file='.$new);
     }
@@ -154,8 +156,7 @@ class Notatnik{
         }
         //return $new_int;
         //header('location: ?file=0.Start');
-        //header('Location: '.$_SERVER['PHP_SELF'].'?file=0.Start');
-        
+        //header('Location: '.$_SERVER['PHP_SELF'].'?file=0.Start');        
         header('Refresh:0; url='.$_SERVER['PHP_SELF'].'?file=0.Start'); 
         //header('Refresh:0; url='.$_SERVER['REQUEST_URI'].'?file=0.Start'); 
         //header('Refresh:0; url='.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].'?file=0.Start'); 
@@ -334,11 +335,11 @@ isset($_POST['setting']) ? header('location: setting.php') : 'error7';
                     <input class="del_confirm" type="submit" name="del_confirm" value="Tak" />
                     <input class="del_confirm" type="submit" name="anuluj" value="Nie" />
                 </span>
-                <span class="bottom">
+                <!--<span class="bottom">
                     Sortowanie :
-                    <label><input class="radio" type="radio" <?php echo (@$_COOKIE['sort']=='0') ? 'checked="checked"' : '';  ?> name="sorting" value="0" /><label>Kolejność tworzenia</label></label>
-                    <label><input class="radio" type="radio" <?php echo (@$_COOKIE['sort']=='1') ? 'checked="checked"' : '';  ?> name="sorting" value="1" /><label>Alfabetycznie</label></label>
-                </span>
+                    <label><input class="radio" type="radio" <?php //echo (@$_COOKIE['sort']=='0') ? 'checked="checked"' : '';  ?> name="sorting" value="0" /><label>Kolejność tworzenia</label></label>
+                    <label><input class="radio" type="radio" <?php //echo (@$_COOKIE['sort']=='1') ? 'checked="checked"' : '';  ?> name="sorting" value="1" /><label>Alfabetycznie</label></label>
+                </span>-->
                 <input class="right" type="submit" name="logout_user" value="Wyloguj" />
                 <input id="setting" class="right" type="submit" name="setting" value="Ustawienia" />
             <?php } ?>
@@ -357,5 +358,5 @@ isset($_POST['setting']) ? header('location: setting.php') : 'error7';
     // echo rand(0,255);
     // echo '<br />';
     // }
-    echo $_SESSION['count'];
+    //echo $_SESSION['count'];
 ?>
