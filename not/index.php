@@ -4,7 +4,7 @@ ini_set("display_errors",1);
 header('Content-Type: text/html; charset=utf-8');
 session_start();
 class Notatnik{
-	function __setTXT($nazwa, $zawartosc)
+	public function __setTXT($nazwa, $zawartosc)
     {
 		$file = 'data/'.$nazwa.'.txt';
 		//open file
@@ -15,7 +15,7 @@ class Notatnik{
 		fclose($fp);
         chmod($file, 0777);//dla servera linux dostep
 	}
-	function __getTXT($nazwa)
+	public function __getTXT($nazwa)
     {
 		$file = 'data/'.$nazwa.'.txt';
 		if(file_exists($file))
@@ -41,7 +41,7 @@ class Notatnik{
 			return 'error';
 		}
 	}
-    function __getNameTab()
+    public function __getNameTab()
     {
         // directory files data base
         $dir = dirname(__FILE__).'/data/';
@@ -76,14 +76,14 @@ class Notatnik{
         }        
         return array($sort_n,$sort_a);
     }
-    function __getCurentName()
+    public function __getCurentName()
     {
         $curent = explode('.', $_GET['file']);
         unset($curent[0]);
         $curent = implode('.', $curent);
         return $curent;
     }
-    function showName()
+    public function showName()
     {   
         $tab = $this->__getNameTab();
         $i = 0;
@@ -95,35 +95,36 @@ class Notatnik{
                 echo '<a id="link-'.$i++.'" class="link" href="?file='.$wyn.'">('.$clear_int.')</a>';
         }
     }
-    function __getInt()
+    public function __getInt()
     {
         //$int = filter_var($_GET['file'], FILTER_SANITIZE_NUMBER_INT);
         $int = explode('.',$_GET['file']);
         return $int[0].'.';
     }
-    function userIn()
+    public function userIn()
     {   
         $_POST['password'] == 'piotrek' ? setcookie('auth','yes',time()+3600*12) : 'password error';
         header('location: ?file='.$_GET['file']);
         
     }
-    function userOut()
+    public function userOut()
     {   
         setcookie ('auth', '', time() - 3600);
         $this->__setTXT($_GET['file'], $_POST['txt']);
         header('location:');
     }
-    function changeName()
+    public function changeName()
     {   
         $new = $this->__getInt().(str_replace('.', ',', $_POST['rename']));
         rename(dirname(__FILE__).'/data/'.$_GET['file'].'.txt', dirname(__FILE__).'/data/'.$new.'.txt');
         //header('location: ?file='.$new);
         //header('Location'.$_SERVER['PHP_SELF'].'?file='.$new);
-        header('Refresh:0; url='.$_SERVER['PHP_SELF'].'?file='.$new);
+        //$_GET['file'] = $new;
+        header('Refresh:0; url='.$_SERVER['PHP_SELF'].'?file='.$new.'&asd=asd');
         //header('Refresh:0; url='.$_SERVER['REQUEST_URI'].'?file='.$new);
         //header('Refresh:0; url='.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].'?file='.$new);
     }
-    function deleteName()
+    public function deleteName()
     {
         unlink('data/'.$_GET['file'].'.txt');
         $dir = dirname(__FILE__).'/data/';
@@ -159,12 +160,12 @@ class Notatnik{
         //header('Refresh:0; url='.$_SERVER['REQUEST_URI'].'?file=0.Start'); 
         //header('Refresh:0; url='.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].'?file=0.Start'); 
     }
-    function __setSortMod($mod)
+    public function __setSortMod($mod)
     {
         setcookie ('sort', $mod, time() + 3600*24*30);
         header('location:');
     }
-    function createDir()
+    public function createDir()
     {
         if(!is_dir('data'))
         {
