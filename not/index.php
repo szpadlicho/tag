@@ -119,12 +119,14 @@ class Notatnik{
         rename(dirname(__FILE__).'/data/'.$_GET['file'].'.txt', dirname(__FILE__).'/data/'.$new.'.txt');
         //header('location: ?file='.$new);
         //header('Location'.$_SERVER['PHP_SELF'].'?file='.$new);
-        //$_GET['file'] = $new;
-        //ob_start();
-        header('Refresh:0; url='.$_SERVER['PHP_SELF'].'?file='.$new.'&asd=asd');
-        //ob_end_flush();
+        //$_GET['file'] = $new;        
         //header('Refresh:0; url='.$_SERVER['REQUEST_URI'].'?file='.$new);
         //header('Refresh:0; url='.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].'?file='.$new);
+        //
+        //ob_start();
+        //header('Refresh:0; url='.$_SERVER['PHP_SELF'].'?file='.$new.'&asd=asd');
+        //ob_end_flush();
+        echo("<script>location.href = 'index.php?file=".$new."';</script>");
     }
     public function deleteName()
     {
@@ -155,11 +157,9 @@ class Notatnik{
             $i++;
         }
         //return $new_int;
-        //header('location: ?file=0.Start');
-        //header('Location: '.$_SERVER['PHP_SELF'].'?file=0.Start');        
-        header('Refresh:0; url='.$_SERVER['PHP_SELF'].'?file=0.Start'); 
-        //header('Refresh:0; url='.$_SERVER['REQUEST_URI'].'?file=0.Start'); 
-        //header('Refresh:0; url='.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].'?file=0.Start'); 
+        //header('location: ?file=0.Start');     
+        //header('Refresh:0; url='.$_SERVER['PHP_SELF'].'?file=0.Start'); 
+        echo("<script>location.href = 'index.php?file=0.start';</script>");
     }
     public function __setSortMod($mod)
     {
@@ -192,7 +192,7 @@ isset($_POST['logout_user']) ? $rec->userOut() : 'error4';
 $sort = $rec->__getNameTab();
 //var_dump($sort);
 isset($_POST['del_confirm']) ? $rec->deleteName() : 'error5';
-//isset($_POST['sorting']) ? $rec->__setSortMod($_POST['sorting']) : 'error6';
+isset($_POST['sorting']) ? $rec->__setSortMod($_POST['sorting']) : 'error6';
 isset($_POST['setting']) ? header('location: setting.php') : 'error7';
 ?>
 <!DOCTYPE HTML>
@@ -335,11 +335,11 @@ isset($_POST['setting']) ? header('location: setting.php') : 'error7';
                     <input class="del_confirm" type="submit" name="del_confirm" value="Tak" />
                     <input class="del_confirm" type="submit" name="anuluj" value="Nie" />
                 </span>
-                <!--<span class="bottom">
+                <span class="bottom">
                     Sortowanie :
-                    <label><input class="radio" type="radio" <?php //echo (@$_COOKIE['sort']=='0') ? 'checked="checked"' : '';  ?> name="sorting" value="0" /><label>Kolejność tworzenia</label></label>
-                    <label><input class="radio" type="radio" <?php //echo (@$_COOKIE['sort']=='1') ? 'checked="checked"' : '';  ?> name="sorting" value="1" /><label>Alfabetycznie</label></label>
-                </span>-->
+                    <label><input class="radio" type="radio" <?php echo (@$_COOKIE['sort']=='0') ? 'checked="checked"' : '';  ?> name="sorting" value="0" /><label>Kolejność tworzenia</label></label>
+                    <label><input class="radio" type="radio" <?php echo (@$_COOKIE['sort']=='1') ? 'checked="checked"' : '';  ?> name="sorting" value="1" /><label>Alfabetycznie</label></label>
+                </span>
                 <input class="right" type="submit" name="logout_user" value="Wyloguj" />
                 <input id="setting" class="right" type="submit" name="setting" value="Ustawienia" />
             <?php } ?>
