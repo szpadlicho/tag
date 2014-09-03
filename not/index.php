@@ -347,10 +347,10 @@ isset($_POST['setting']) ? header('location: setting.php') : 'error7';
     //var_dump ($_GET);
     //var_dump ($_SESSION);
     //var_dump ($_COOKIE);
-    // for($x=0; $x<$_SESSION['count']; $x++){
-    // echo rand(0,255);
-    // echo '<br />';
-    // }
+    //for($x=0; $x<$_SESSION['count']; $x++){
+    //echo rand(0,255);
+    //echo '<br />';
+    //}
     //echo $_SESSION['count'];
     //unset($_SESSION['count'])
 ?>
