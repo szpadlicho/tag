@@ -182,7 +182,7 @@ isset($_POST['add']) && !empty($_POST['new_name']) ? $rec->__setTXT($_SESSION['c
 isset($_POST['confirm']) && !empty($_POST['rename']) ? $rec->changeName() : 'error2';
 isset($_POST['login_user']) && !empty($_POST['password']) ? $rec->userIn() : 'error3';
 isset($_POST['logout_user']) ? $rec->userOut() : 'error4';
-//$sort = $rec->__getNameTab();
+$rec->__getNameTab();//wywołuje żeby sesja count sie zapisała dla css kolorowego
 //var_dump($sort);
 isset($_POST['del_confirm']) ? $rec->deleteName() : 'error5';
 isset($_POST['setting']) ? header('location: setting.php') : 'error7';
@@ -352,4 +352,5 @@ isset($_POST['setting']) ? header('location: setting.php') : 'error7';
     // echo '<br />';
     // }
     //echo $_SESSION['count'];
+    //unset($_SESSION['count'])
 ?>
