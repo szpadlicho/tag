@@ -1,5 +1,6 @@
 <?php
-class TagCloudCls{
+class TagCloudCls
+{
 	private $url;
 	private $decline_words;
 	//private $strona;
@@ -55,32 +56,29 @@ class TagCloudCls{
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 		curl_setopt($ch, CURLOPT_COOKIEFILE, 'cookies.txt');
 		curl_setopt($ch, CURLOPT_COOKIEJAR, 'cookies.txt');
-		if($post!==false)
-		{
+		if ($post!==false) {
 			curl_setopt($ch, CURLOPT_POST, true);
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
 		}
 		$zwroc=curl_exec($ch);
 		 
-		if($blad>0)
-		{
+		if ($blad>0) {
 			$naglowek=substr(curl_getinfo($ch, CURLINFO_HTTP_CODE), 0, 1);
-			if($zwroc=='' OR curl_error($ch)!='' OR $naglowek=='4' OR $naglowek=='5')
-			{
+			if ($zwroc=='' OR curl_error($ch)!='' OR $naglowek=='4' OR $naglowek=='5') {
 				curl_close($ch);
 				sleep(1);
 				return $this->otworz_adres($post, --$blad);
 			}
-		}
-		else
+		} else {
 			return false;
+        }
 		
 		curl_close($ch);
-		return $this->gzdecode2($zwroc);/*otwiera i zarazem zwraca poniÅ¼sza funkcje*/
+		return $this->gzdecode2($zwroc);/*otwiera i zarazem zwraca poni¿sza funkcje*/
 	}	 
 	public function gzdecode2($tresc)
 	{//rozpakowywyje strone jesli jest spakowana
-		if(strlen($tresc)<18 OR strcmp(substr($tresc,0,2),"\x1f\x8b")){
+		if (strlen($tresc)<18 OR strcmp(substr($tresc,0,2),"\x1f\x8b")) {
 			return $tresc;
 			return gzinflate(substr($tresc, 10));
 		}
@@ -99,14 +97,14 @@ class TagCloudCls{
 	public function set_array($text)
 	{/* Get the posted text */
 		$this->stopwords = $stopwords = explode(",", $this->decline_words);
-		$words = str_word_count($text, 1, 'Ä…Ä™Å‚Ã³Å¼ÅºÅ›Ä‡Å„Ã¶Ä„Ä˜ÅÃ“Å»Å¹ÅšÄ†Åƒ1234567890'); /* Generate list of words */
+		$words = str_word_count($text, 1, '¹ê³ó¿Ÿœæñö¥Ê£Ó¯ŒÆÑ1234567890'); /* Generate list of words */
 		$this->word_count = $word_count = count($words); /* Word count */
 		$this->unique_words = $unique_words = count(array_unique($words) ); /* Unique word count */
 		return $this->words = $words;
 		//$this->filter_stopwords($this->words, $this->stopwords);
 	}
 	public function filter_stopwords($words) 
-	{//usÃ³wanie niechcianych sÅ‚ow z teksu
+	{//usówanie niechcianych s³ow z teksu
 		foreach ($words as $pos => $word) {
 			if (!in_array(strtolower($word), $this->stopwords, TRUE)) {
 				$filtered_words[$pos] = $word;
@@ -116,22 +114,21 @@ class TagCloudCls{
 		//return $this->word_freq($this->words);
 	}
 	public function word_freq($words) 
-	{//czestotliweosc wystapienia sÅ‚owa w tekscie
+	{//czestotliweosc wystapienia s³owa w tekscie
 		$frequency_list = array();//deklaruje nowa tablice
 		foreach ($words as $pos => $word) {
 			$word = strtolower($word);//zmieniam na male literki
-			if (array_key_exists($word, $frequency_list)) {//porÃ³wnuje czy dane sÅ‚owo jest juz w nowej tablicy jako klucz
+			if (array_key_exists($word, $frequency_list)) {//porównuje czy dane s³owo jest juz w nowej tablicy jako klucz
 				++$frequency_list[$word];//jesli jest zwiekszam wartosc o jeden
-			}
-			else {
+			} else {
 				$frequency_list[$word] = 1;//jeli nie ma jeszcze ustawiam wartosc na jeden
 			}
 		}
-		return $this->frequency_list=$frequency_list;//tablica ze sÅ‚owami jako klucz i iloscia powtÃ³rzeÅ„ jak zawartosc
+		return $this->frequency_list=$frequency_list;//tablica ze s³owami jako klucz i iloscia powtórzeñ jak zawartosc
 		//return $this->freq_filter($this->words, $this->filter) ;
 	}
 	public function freq_filter($words, $filter) 
-	{//filtrowanie sÅ‚ow z maÅ‚a iloÅ›cia powtÃ³rzen
+	{//filtrowanie s³ow z ma³a iloœcia powtórzen
 		return array_filter($words, function($v) use($filter) { if ($v >= $filter) return $v; } );
 		//return $this->word_cloud($words, $this->word_count);
 	}
@@ -139,7 +136,7 @@ class TagCloudCls{
 	{ /* This word cloud generation algorithm was taken from the Wikipedia page on "word cloud"
        with some minor modifications to the implementation */  
 		$cloud = "";   
-		$tags = 0;//bedzie zliczac ilos tagÃ³w    
+		$tags = 0;//bedzie zliczac ilos tagów    
 		$fmax = 100; /* Maximum font size */
 		$fmin = 10; /* Minimum font size */
 		$tmin = @min($words); /* najmniejsza wartosc wystepujaca w tablicy*/
@@ -149,7 +146,7 @@ class TagCloudCls{
 			if ($frequency > $tmin) {// 4 > 3
 				$font_size = floor(  ( $fmax * ($frequency - $tmin) ) / ( $tmax - $tmin )  );//96*(4-3)/(10-3) = 96*1/7 = 96/7 = 13,71428571428571 = floor 13
                 
-                /*obliczam stosunek wielkoÅ›ci liczb do sÅ‚owa */
+                /*obliczam stosunek wielkoœci liczb do s³owa */
                 $font_size_sec = floor( $fmax * ($frequency / $tmax) / 2 );
                 /*obliczam margines */
                 $marg =  round( 1-($font_size_sec/70) , 3) ;
@@ -168,13 +165,12 @@ class TagCloudCls{
 				$color = "rgb($r,$g,$b)";
 				//$color = '#' . sprintf('%02s', dechex($r)) . sprintf('%02s', dechex($g)) . sprintf('%02s', dechex($b));
                 
-				/*obliczam procentowa zawartosc sÅ‚owa w tekscie*/
+				/*obliczam procentowa zawartosc s³owa w tekscie*/
 				$proc=round(($frequency/$this->word_count)*100, 2);
 
                 
                 
-			}
-			else {
+			} else {
 				$font_size = 0;
 			}       
 			if ($font_size >= $fmin) {//wyswietlanie
@@ -189,7 +185,7 @@ class TagCloudCls{
 	{ /* This word cloud generation algorithm was taken from the Wikipedia page on "word cloud"
        with some minor modifications to the implementation */  
 		$cloud = "";   
-		$tags = 0;//bedzie zliczac ilos tagÃ³w    
+		$tags = 0;//bedzie zliczac ilos tagów    
 		$fmax = 100; /* Maximum font size */
 		$fmin = 20; /* Minimum font size */
 		$tmin = @min($words); /* najmniejsza wartosc wystepujaca w tablicy*/
@@ -199,7 +195,7 @@ class TagCloudCls{
 			if ($frequency > $tmin) {// 4 > 3
 				$font_size = floor(  ( $fmax * ($frequency - $tmin) ) / ( $tmax - $tmin )  );//96*(4-3)/(10-3) = 96*1/7 = 96/7 = 13,71428571428571 = floor 13
                 
-                /*obliczam stosunek wielkoÅ›ci liczb do sÅ‚owa */
+                /*obliczam stosunek wielkoœci liczb do s³owa */
                 $font_size > 10 ? $wsp = 2 : $wsp = 1;
                 $font_size_sec = floor( $fmax * ($frequency / $tmax) / $wsp );
                 /*obliczam margines */
@@ -219,13 +215,12 @@ class TagCloudCls{
 				$color = "rgb($r,$g,$b)";
 				//$color = '#' . sprintf('%02s', dechex($r)) . sprintf('%02s', dechex($g)) . sprintf('%02s', dechex($b));
                 
-				/*obliczam procentowa zawartosc sÅ‚owa w tekscie*/
+				/*obliczam procentowa zawartosc s³owa w tekscie*/
 				$proc=round(($frequency/$this->word_count)*100, 2);
 
                 
                 
-			}
-			else {
+			} else {
 				$font_size = 20;
 			}       
 			if ($font_size >= $fmin) {//wyswietlanie
@@ -236,147 +231,153 @@ class TagCloudCls{
 		return array($cloud, $tags); 
 		//$cloud .= "</div>";       
 	}
-	function setIgnoreWords($zawartosc){
+	public function setIgnoreWords($zawartosc)
+    {
 		$file="ignore.txt";
 		//otwarcie pliku
 		$fp = fopen($file, "w");
 		// zapisanie danych
 		fputs($fp, $zawartosc);
-		// zamkniÄ™cie pliku
+		// zamkniêcie pliku
 		fclose($fp);	
 	}
-	function getIgnoreWords(){
+	public function getIgnoreWords()
+    {
 		$file="ignore.txt";
-		if(file_exists($file)){	
+		if (file_exists($file)) {	
 			//otwarcie pliku
 			$fp = fopen($file, "r");
 			// czytam danye
 			$dane = fread($fp, filesize($file));
-			// zamkniÄ™cie pliku
+			// zamkniêcie pliku
 			fclose($fp);
 			return $dane;
-		}
-		else{
+		} else {
 			return "0,1";
 		}
 	}
-	function _setFrequencyNumber($zawartosc){
+	public function _setFrequencyNumber($zawartosc)
+    {
 		$file="nr.txt";
 		//otwarcie pliku
 		$fp = fopen($file, "w");
 		// zapisanie danych
 		fputs($fp, $zawartosc);
-		// zamkniÄ™cie pliku
+		// zamkniêcie pliku
 		fclose($fp);	
 	}
-	function _getFrequencyNumber(){
+	public function _getFrequencyNumber()
+    {
 		$file="nr.txt";
-		if(file_exists($file)){		
+		if (file_exists($file)) {		
 			//otwarcie pliku
 			$fp = fopen($file, "r");
 			// czytam danye
 			$dane = fread($fp, filesize($file));
-			// zamkniÄ™cie pliku
+			// zamkniêcie pliku
 			fclose($fp);
 			return $dane;
-		}
-		else{
+		} else {
 			return 1;
 		}
 	}
-	function _setModNumber($zawartosc){
+	public function _setModNumber($zawartosc)
+    {
 		$file="mod.txt";
 		//otwarcie pliku
 		$fp = fopen($file, "w");
 		// zapisanie danych
 		fputs($fp, $zawartosc);
-		// zamkniÄ™cie pliku
+		// zamkniêcie pliku
 		fclose($fp);	
 	}
-	function _getModNumber(){
+	public function _getModNumber()
+    {
 		$file="mod.txt";
-		if(file_exists($file)){	
+		if (file_exists($file)) {	
 			//otwarcie pliku
 			$fp = fopen($file, "r");
 			// czytam danye
 			$dane = fread($fp, filesize($file));
-			// zamkniÄ™cie pliku
+			// zamkniêcie pliku
 			fclose($fp);
 			return $dane;
-		}
-		else{
+		} else {
 			return 1;
 		}
 	}
-	function _setSort($zawartosc){
+	public function _setSort($zawartosc)
+    {
 		$file="sort.txt";
 		//otwarcie pliku
 		$fp = fopen($file, "w");
 		// zapisanie danych
 		fputs($fp, $zawartosc);
-		// zamkniÄ™cie pliku
+		// zamkniêcie pliku
 		fclose($fp);	
 	}
-	function _getSort(){
+	public function _getSort()
+    {
 		$file="sort.txt";
-		if(file_exists($file)){	
+		if (file_exists($file)) {	
 			//otwarcie pliku
 			$fp = fopen($file, "r");
 			// czytam danye
 			$dane = fread($fp, filesize($file));
-			// zamkniÄ™cie pliku
+			// zamkniêcie pliku
 			fclose($fp);
 			return $dane;
-		}
-		else{
+		} else {
 			return 'no';
 		}
 	}
-	function _setClearNumber($zawartosc){
+	public function _setClearNumber($zawartosc)
+    {
 		$file="clear_nr.txt";
 		//otwarcie pliku
 		$fp = fopen($file, "w");
 		// zapisanie danych
 		fputs($fp, $zawartosc);
-		// zamkniÄ™cie pliku
+		// zamkniêcie pliku
 		fclose($fp);	
 	}
-	function _getClearNumber(){
+	public function _getClearNumber() 
+    {
 		$file="clear_nr.txt";
-		if(file_exists($file)){	
+		if (file_exists($file)) {	
 			//otwarcie pliku
 			$fp = fopen($file, "r");
 			// czytam danye
 			$dane = fread($fp, filesize($file));
-			// zamkniÄ™cie pliku
+			// zamkniêcie pliku
 			fclose($fp);
 			return $dane;
-		}
-		else{
+		} else {
 			return 'no';
 		}
 	}
-    function _setShowMod($zawartosc){
+    public function _setShowMod($zawartosc)
+    {
 		$file="show_mod.txt";
 		//otwarcie pliku
 		$fp = fopen($file, "w");
 		// zapisanie danych
 		fputs($fp, $zawartosc);
-		// zamkniÄ™cie pliku
+		// zamkniêcie pliku
 		fclose($fp);	
 	}
-	function _getShowMod(){
+	public function _getShowMod()
+    {
 		$file="show_mod.txt";
-		if(file_exists($file)){	
+		if (file_exists($file)) {	
 			//otwarcie pliku
 			$fp = fopen($file, "r");
 			// czytam danye
 			$dane = fread($fp, filesize($file));
-			// zamkniÄ™cie pliku
+			// zamkniêcie pliku
 			fclose($fp);
 			return $dane;
-		}
-		else{
+		} else {
 			return 'no';
 		}
 	}

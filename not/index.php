@@ -19,12 +19,12 @@ class Notatnik
 	public function __getTXT($nazwa)
     {
 		$file = 'data/'.$nazwa.'.txt';
-		if(file_exists($file)) {	
+		if (file_exists($file)) {	
 			//open file
 			$fp = fopen($file, 'r');
 			//check size
             $size = filesize($file);
-            if($size > 0 ) {
+            if ($size > 0 ) {
                 //read file
                 $dane = fread($fp, $size);
                 //close file
@@ -43,11 +43,11 @@ class Notatnik
         $dir = dirname(__FILE__).'/data/';
         $arr = scandir($dir);
         $sort_n = array();
-        foreach($arr as $file){
+        foreach ($arr as $file) {
             $src = new SplFileInfo($file);
             //get only extension of file
             $ext = $src->getExtension();
-            if($file != '.' && $file != '..' && !is_dir($file) && $ext !='php') {
+            if ($file != '.' && $file != '..' && !is_dir($file) && $ext !='php') {
                 //get only file name
                 $name = $src->getBasename('.txt');
                 //add file name to array
@@ -59,13 +59,13 @@ class Notatnik
         usort($sort_n, 'strnatcasecmp');
         //sortowanie alfabetycznie  
         $wyn = array();
-        foreach($sort_n as $un){
+        foreach ($sort_n as $un) {
             $un = explode('.', $un);
             $wyn[] .= $un[1].'.'.$un[0];            
         }
         usort($wyn, 'strnatcasecmp');
         $sort_a=array();
-        foreach($wyn as $un){
+        foreach ($wyn as $un) {
             $un = explode('.', $un);
             $sort_a[] .= $un[1].'.'.$un[0];            
         }        
@@ -83,7 +83,7 @@ class Notatnik
         $tab = $this->__getNameTab();
         $i = 0;
         $sort = (@$_COOKIE['sort']=='1') ? $tab[1] : $tab[0] ;
-        foreach($sort as $wyn){
+        foreach ($sort as $wyn) {
                 $clear_int=explode('.', $wyn);
                 unset($clear_int[0]);
                 $clear_int=implode('.', $clear_int);
@@ -129,11 +129,11 @@ class Notatnik
         $dir = dirname(__FILE__).'/data/';
         $arr = scandir($dir);
         $sort_n = array();
-        foreach($arr as $file){
+        foreach ($arr as $file) {
             $src = new SplFileInfo($file);
             //get only extension of file
             $ext = $src->getExtension();
-            if($file != '.' && $file != '..' && !is_dir($file) && $ext !='php') {
+            if ($file != '.' && $file != '..' && !is_dir($file) && $ext !='php') {
                 //get only file name
                 $name = $src->getBasename('.txt');
                 //add file name to array
@@ -143,7 +143,7 @@ class Notatnik
         usort($sort_n, 'strnatcasecmp');
         $i = 0;
         $new_int = array();
-        foreach($sort_n as $pices){
+        foreach ($sort_n as $pices) {
             $name = explode('.', $pices);
             $add_int = $i.'.'.$name[1];
             $new_int[] .= $add_int;
@@ -162,7 +162,7 @@ class Notatnik
     // }
     public function createDir()
     {
-        if(!is_dir('data')) {
+        if (! is_dir('data')) {
             @mkdir('data');
             chmod('data', 0777);
             //exec ("find /data -type d -exec chmod 0750 {} +");
@@ -176,9 +176,9 @@ class Notatnik
 }
 $rec = new Notatnik();
 $rec->createDir();
-!isset($_GET['file']) ? $_GET['file'] = '0.start' : $error = 'Utworz nowy plik' ;
+! isset($_GET['file']) ? $_GET['file'] = '0.start' : $error = 'Utworz nowy plik' ;
 isset($_POST['save']) ? $rec->__setTXT($_GET['file'], $_POST['txt']) : 'error1';
-isset($_POST['add']) && !empty($_POST['new_name']) ? $rec->__setTXT($_SESSION['count'].'.'.(str_replace('.', ',', $_POST['new_name'])), '') : 'error2';
+isset($_POST['add']) && ! empty($_POST['new_name']) ? $rec->__setTXT($_SESSION['count'].'.'.(str_replace('.', ',', $_POST['new_name'])), '') : 'error2';
 isset($_POST['confirm']) && !empty($_POST['rename']) ? $rec->changeName() : 'error2';
 isset($_POST['login_user']) && !empty($_POST['password']) ? $rec->userIn() : 'error3';
 isset($_POST['logout_user']) ? $rec->userOut() : 'error4';
@@ -197,7 +197,7 @@ isset($_POST['setting']) ? header('location: setting.php') : 'error7';
     <link rel="stylesheet" href="css/style.php">
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.5.2.js"></script>
     <script type="text/javascript">
-    <?php if(isset($_COOKIE['auth'])) { ?>
+    <?php if (isset($_COOKIE['auth'])) { ?>
     (function($)
     {
         $(document).ready(function() 
@@ -282,7 +282,7 @@ isset($_POST['setting']) ? header('location: setting.php') : 'error7';
     <script type="text/javascript"></script>
     <style type="text/css">
     <?php
-    for($x=0; $x<$_SESSION['count']; $x++){
+    for ($x=0; $x<$_SESSION['count']; $x++) {
         $r = rand(70,255);
         $g = rand(70,255);
         $b = rand(70,255);
@@ -303,7 +303,7 @@ isset($_POST['setting']) ? header('location: setting.php') : 'error7';
     <section id="site-place-holder">
         <p class="neon">Notatnik</p>
         <form method="POST">
-            <?php if(isset($_COOKIE['auth'])) { 
+            <?php if (isset($_COOKIE['auth'])) { 
                 $rec->showName();
             } else { ?>
                 <input type="password" name="password" /><input type="submit" name="login_user" value="Zaloguj" />

@@ -6,20 +6,17 @@ session_start();
 // ini_set('xdebug.var_display_max_data', -1);
 include ('tag_cloud_cls.php');
 $cls=new TagCloudCls();
-if(!empty($_POST['url']) && isset($_POST['gen_url'])){
+if (! empty($_POST['url']) && isset($_POST['gen_url'])) {
 	$cls->setUrl(@$_POST['url']);
 	$_SESSION['url']=@$_POST['url'];/*zapamitywanie*/
 	unset($_SESSION['text']);
-}
-else if(!empty($_SESSION['url']) && !isset($_POST['gen_url']) && !isset($_POST['gen_tex'])){
+} elseif (! empty($_SESSION['url']) && !isset($_POST['gen_url']) && !isset($_POST['gen_tex'])) {
 	$cls->setUrl(@$_SESSION['url']);
-}
-else if(!empty($_POST['text']) && isset($_POST['gen_tex'])){
+} elseif (! empty($_POST['text']) && isset($_POST['gen_tex'])) {
 	$text=@$_POST['text'];
 	$_SESSION['text']=@$_POST['text'];
 	unset($_SESSION['url']);
-}
-else{
+} else {
 	$text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas vel sollicitudin mauris, imperdiet tempor libero. Aliquam vel sodales neque. Aliquam nulla enim, auctor sit amet orci nec, malesuada auctor justo. Sed eu ligula tellus. Maecenas lacinia a lacus vel lobortis. Integer et leo sit amet purus malesuada pellentesque. Ut non libero at magna malesuada tincidunt et ac metus. Fusce eu gravida turpis.
 
 	Fusce vulputate, urna tristique sollicitudin ultrices, nisi eros consectetur tellus, eget tempor elit purus non risus. Nullam porttitor tempus ipsum, non lacinia quam pharetra non. Mauris volutpat arcu dolor, nec posuere ligula ornare eget. Phasellus blandit tortor quam, in consectetur libero malesuada in. Curabitur sed lacus malesuada nulla volutpat fermentum nec suscipit turpis. Nunc ornare metus vel facilisis condimentum. Curabitur placerat ipsum sit amet turpis pellentesque aliquet. Cras augue dui, ornare vitae auctor eget, mattis nec lorem. Mauris ornare euismod arcu, et egestas mi sodales ac. Nunc vestibulum sapien ut turpis pulvinar, ac euismod mi facilisis. Morbi volutpat orci nisl, in iaculis justo lobortis vel. Praesent iaculis arcu urna, in facilisis tellus pharetra id. Etiam at lorem ullamcorper, condimentum ante non, mollis elit.
@@ -30,39 +27,39 @@ else{
 
 	Sed scelerisque felis nibh, a lobortis quam dapibus faucibus. Vestibulum sed quam in urna pellentesque iaculis. Suspendisse varius nisi libero, sed posuere justo gravida ac. Aenean varius lobortis nisl sit amet tempor. Aenean pulvinar accumsan leo ut egestas. Donec tincidunt faucibus neque, ac sollicitudin eros euismod eu. Nulla vel ligula a quam aliquet sollicitudin. ";
 }
-if(isset($_SESSION['url'])){ 
+if (isset($_SESSION['url'])) { 
 	$_POST['url']=$_SESSION['url'];/*zapamitywanie*/
 }
-if(isset($_SESSION['text'])){ 
+if (isset($_SESSION['text'])) { 
 	$text=$_POST['text']=$_SESSION['text'];/*zapamitywanie*/
 }
-if(isset($_POST['ignore_list']) && !empty($_POST['ignore_list']) && isset($_POST['ignore_button'])){
+if (isset($_POST['ignore_list']) && ! empty($_POST['ignore_list']) && isset($_POST['ignore_button'])) {
 	$cls->setIgnoreWords($_POST['ignore_list']);
 }
-if(isset($_POST['filtr_nr']) && !empty($_POST['filtr_nr']) && isset($_POST['filtr_button'])){
+if (isset($_POST['filtr_nr']) && ! empty($_POST['filtr_nr']) && isset($_POST['filtr_button'])) {
 	$cls->_setFrequencyNumber($_POST['filtr_nr']);
 }
-if(isset($_POST['mod_nr']) && !empty($_POST['mod_nr']) && isset($_POST['mod_button'])){
+if (isset($_POST['mod_nr']) && ! empty($_POST['mod_nr']) && isset($_POST['mod_button'])) {
 	$cls->_setModNumber($_POST['mod_nr']);
 }
-if(isset($_POST['sort_nr']) && !empty($_POST['sort_nr']) && isset($_POST['sort_button'])){
+if (isset($_POST['sort_nr']) && ! empty($_POST['sort_nr']) && isset($_POST['sort_button'])) {
 	$cls->_setSort($_POST['sort_nr']);
 }
-if(isset($_POST['clear_nr']) && !empty($_POST['clear_nr']) && isset($_POST['clear_button'])){
+if (isset($_POST['clear_nr']) && ! empty($_POST['clear_nr']) && isset($_POST['clear_button'])) {
 	$cls->_setClearNumber($_POST['clear_nr']);
 }
-if(isset($_POST['show_nr']) && !empty($_POST['show_nr']) && isset($_POST['show_button'])){
+if (isset($_POST['show_nr']) && ! empty($_POST['show_nr']) && isset($_POST['show_button'])) {
 	$cls->_setShowMod($_POST['show_nr']);
 }
 
 $cls->setDeclineWords($cls->getIgnoreWords());
 
-if(!isset($_SESSION['text']) && isset($_SESSION['url']) && $cls->_getModNumber()==1){// dodac mod na 2 metody
+if (! isset($_SESSION['text']) && isset($_SESSION['url']) && $cls->_getModNumber()==1) {// dodac mod na 2 metody
 	$document=$cls->otworz_adres();
 	// Dump contents (without tags) from HTML
 	$text=$cls->html2txt($document);// tryb 1	
 }
-if(!isset($_SESSION['text']) && isset($_SESSION['url']) && $cls->_getModNumber()!=1){// || isset($_POST['filtr_button']) || isset($_POST['ignore_button']) 
+if (! isset($_SESSION['text']) && isset($_SESSION['url']) && $cls->_getModNumber()!=1) {// || isset($_POST['filtr_button']) || isset($_POST['ignore_button']) 
 	$document=$cls->otworz_adres();
 	include ('simple_html_dom.php');
     // Add http:// if no exist 
@@ -70,7 +67,7 @@ if(!isset($_SESSION['text']) && isset($_SESSION['url']) && $cls->_getModNumber()
 	// Dump contents (without tags) from HTML
 	$text = file_get_html($cls->getUrl())->plaintext;//tryb 2
 }
-if(!empty($document) || isset($_POST['text'])){
+if (! empty($document) || isset($_POST['text'])) {
 	$text_arr=$cls->set_array($text);
     //var_dump($text_arr);
 	$word_clear=$cls->filter_stopwords($text_arr);
@@ -79,22 +76,21 @@ if(!empty($document) || isset($_POST['text'])){
     //var_dump($word_frek);
 	$word_filter=$cls->freq_filter($word_frek, $cls->_getFrequencyNumber());//$cls->_getFrequencyNumber() mozna wcisnac odrazu w klase
     //var_dump($word_filter);
-    if($cls->_getSort()=='yes'){//do sortowania 
+    if ($cls->_getSort()=='yes') {//do sortowania 
         arsort($word_filter);//sortuje pod wzgledem wartosci od największej
         reset($word_filter);//wracam do pierwszej pozycji w tablicy (ważne)!!
     }
-	if($cls->_getClearNumber()=='no'){//do usuwania liczb
-		foreach($word_filter as $key => $value){
-			if(is_int($key)){//sprawdzam czy klucz to liczba
+	if ($cls->_getClearNumber()=='no') {//do usuwania liczb
+		foreach ($word_filter as $key => $value) {
+			if (is_int($key)) {//sprawdzam czy klucz to liczba
 				unset($word_filter[$key]);//usuwam klucze liczbowe
 			}
 		}
 	}
     //var_dump($word_filter);    
-    if($cls->_getShowMod()=='1'){
+    if ($cls->_getShowMod()=='1') {
         $des=$cls->word_cloud_v2($word_filter);
-    }
-    else{
+    } else {
         $des=$cls->word_cloud($word_filter);
     }
     //var_dump($des);
@@ -116,7 +112,7 @@ $text=preg_replace('/(\s)\s*/', '\\1', trim($text));//usuwam zbedne spacje z tex
 	<div id="place-holder">
 		<div>
 			<form method="post">
-				URL<input id="url_inp" type="text" name="url" value="<?php if(isset($_POST['url'])){echo @$_SESSION['url'] ;} ?>"/><input class="sub" type="submit" name="gen_url" value="Generuj Chmurę" />
+				URL<input id="url_inp" type="text" name="url" value="<?php if (isset($_POST['url'])) {echo @$_SESSION['url'] ;} ?>"/><input class="sub" type="submit" name="gen_url" value="Generuj Chmurę" />
 			</form>
 		</div>
 		<div id="inf_div">
