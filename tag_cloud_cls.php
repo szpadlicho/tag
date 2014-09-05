@@ -74,7 +74,7 @@ class TagCloudCls
         }
 		
 		curl_close($ch);
-		return $this->gzdecode2($zwroc);/*otwiera i zarazem zwraca poni¿sza funkcje*/
+		return $this->gzdecode2($zwroc);/*otwiera i zarazem zwraca poniÅ¼sza funkcje*/
 	}	 
 	public function gzdecode2($tresc)
 	{//rozpakowywyje strone jesli jest spakowana
@@ -97,14 +97,14 @@ class TagCloudCls
 	public function set_array($text)
 	{/* Get the posted text */
 		$this->stopwords = $stopwords = explode(",", $this->decline_words);
-		$words = str_word_count($text, 1, '¹ê³ó¿Ÿœæñö¥Ê£Ó¯ŒÆÑ1234567890'); /* Generate list of words */
+		$words = str_word_count($text, 1, 'Ä…Ä™Å‚Ã³Å¼ÅºÅ›Ä‡Å„Ã¶Ä„Ä˜ÅÃ“Å»Å¹ÅšÄ†Åƒ1234567890'); /* Generate list of words */
 		$this->word_count = $word_count = count($words); /* Word count */
 		$this->unique_words = $unique_words = count(array_unique($words) ); /* Unique word count */
 		return $this->words = $words;
 		//$this->filter_stopwords($this->words, $this->stopwords);
 	}
 	public function filter_stopwords($words) 
-	{//usówanie niechcianych s³ow z teksu
+	{//usÃ³wanie niechcianych sÅ‚ow z teksu
 		foreach ($words as $pos => $word) {
 			if (!in_array(strtolower($word), $this->stopwords, TRUE)) {
 				$filtered_words[$pos] = $word;
@@ -114,21 +114,21 @@ class TagCloudCls
 		//return $this->word_freq($this->words);
 	}
 	public function word_freq($words) 
-	{//czestotliweosc wystapienia s³owa w tekscie
+	{//czestotliweosc wystapienia sÅ‚owa w tekscie
 		$frequency_list = array();//deklaruje nowa tablice
 		foreach ($words as $pos => $word) {
 			$word = strtolower($word);//zmieniam na male literki
-			if (array_key_exists($word, $frequency_list)) {//porównuje czy dane s³owo jest juz w nowej tablicy jako klucz
+			if (array_key_exists($word, $frequency_list)) {//porÃ³wnuje czy dane sÅ‚owo jest juz w nowej tablicy jako klucz
 				++$frequency_list[$word];//jesli jest zwiekszam wartosc o jeden
 			} else {
 				$frequency_list[$word] = 1;//jeli nie ma jeszcze ustawiam wartosc na jeden
 			}
 		}
-		return $this->frequency_list=$frequency_list;//tablica ze s³owami jako klucz i iloscia powtórzeñ jak zawartosc
+		return $this->frequency_list=$frequency_list;//tablica ze sÅ‚owami jako klucz i iloscia powtÃ³rzeÅ„ jak zawartosc
 		//return $this->freq_filter($this->words, $this->filter) ;
 	}
 	public function freq_filter($words, $filter) 
-	{//filtrowanie s³ow z ma³a iloœcia powtórzen
+	{//filtrowanie sÅ‚ow z maÅ‚a iloÅ›cia powtÃ³rzen
 		return array_filter($words, function($v) use($filter) { if ($v >= $filter) return $v; } );
 		//return $this->word_cloud($words, $this->word_count);
 	}
@@ -136,7 +136,7 @@ class TagCloudCls
 	{ /* This word cloud generation algorithm was taken from the Wikipedia page on "word cloud"
        with some minor modifications to the implementation */  
 		$cloud = "";   
-		$tags = 0;//bedzie zliczac ilos tagów    
+		$tags = 0;//bedzie zliczac ilos tagÃ³w    
 		$fmax = 100; /* Maximum font size */
 		$fmin = 10; /* Minimum font size */
 		$tmin = @min($words); /* najmniejsza wartosc wystepujaca w tablicy*/
@@ -146,7 +146,7 @@ class TagCloudCls
 			if ($frequency > $tmin) {// 4 > 3
 				$font_size = floor(  ( $fmax * ($frequency - $tmin) ) / ( $tmax - $tmin )  );//96*(4-3)/(10-3) = 96*1/7 = 96/7 = 13,71428571428571 = floor 13
                 
-                /*obliczam stosunek wielkoœci liczb do s³owa */
+                /*obliczam stosunek wielkoÅ›ci liczb do sÅ‚owa */
                 $font_size_sec = floor( $fmax * ($frequency / $tmax) / 2 );
                 /*obliczam margines */
                 $marg =  round( 1-($font_size_sec/70) , 3) ;
@@ -165,7 +165,7 @@ class TagCloudCls
 				$color = "rgb($r,$g,$b)";
 				//$color = '#' . sprintf('%02s', dechex($r)) . sprintf('%02s', dechex($g)) . sprintf('%02s', dechex($b));
                 
-				/*obliczam procentowa zawartosc s³owa w tekscie*/
+				/*obliczam procentowa zawartosc sÅ‚owa w tekscie*/
 				$proc=round(($frequency/$this->word_count)*100, 2);
 
                 
@@ -185,7 +185,7 @@ class TagCloudCls
 	{ /* This word cloud generation algorithm was taken from the Wikipedia page on "word cloud"
        with some minor modifications to the implementation */  
 		$cloud = "";   
-		$tags = 0;//bedzie zliczac ilos tagów    
+		$tags = 0;//bedzie zliczac ilos tagÃ³w    
 		$fmax = 100; /* Maximum font size */
 		$fmin = 20; /* Minimum font size */
 		$tmin = @min($words); /* najmniejsza wartosc wystepujaca w tablicy*/
@@ -195,7 +195,7 @@ class TagCloudCls
 			if ($frequency > $tmin) {// 4 > 3
 				$font_size = floor(  ( $fmax * ($frequency - $tmin) ) / ( $tmax - $tmin )  );//96*(4-3)/(10-3) = 96*1/7 = 96/7 = 13,71428571428571 = floor 13
                 
-                /*obliczam stosunek wielkoœci liczb do s³owa */
+                /*obliczam stosunek wielkoÅ›ci liczb do sÅ‚owa */
                 $font_size > 10 ? $wsp = 2 : $wsp = 1;
                 $font_size_sec = floor( $fmax * ($frequency / $tmax) / $wsp );
                 /*obliczam margines */
@@ -215,7 +215,7 @@ class TagCloudCls
 				$color = "rgb($r,$g,$b)";
 				//$color = '#' . sprintf('%02s', dechex($r)) . sprintf('%02s', dechex($g)) . sprintf('%02s', dechex($b));
                 
-				/*obliczam procentowa zawartosc s³owa w tekscie*/
+				/*obliczam procentowa zawartosc sÅ‚owa w tekscie*/
 				$proc=round(($frequency/$this->word_count)*100, 2);
 
                 
@@ -238,7 +238,7 @@ class TagCloudCls
 		$fp = fopen($file, "w");
 		// zapisanie danych
 		fputs($fp, $zawartosc);
-		// zamkniêcie pliku
+		// zamkniÄ™cie pliku
 		fclose($fp);	
 	}
 	public function getIgnoreWords()
@@ -249,7 +249,7 @@ class TagCloudCls
 			$fp = fopen($file, "r");
 			// czytam danye
 			$dane = fread($fp, filesize($file));
-			// zamkniêcie pliku
+			// zamkniÄ™cie pliku
 			fclose($fp);
 			return $dane;
 		} else {
@@ -263,7 +263,7 @@ class TagCloudCls
 		$fp = fopen($file, "w");
 		// zapisanie danych
 		fputs($fp, $zawartosc);
-		// zamkniêcie pliku
+		// zamkniÄ™cie pliku
 		fclose($fp);	
 	}
 	public function _getFrequencyNumber()
@@ -274,7 +274,7 @@ class TagCloudCls
 			$fp = fopen($file, "r");
 			// czytam danye
 			$dane = fread($fp, filesize($file));
-			// zamkniêcie pliku
+			// zamkniÄ™cie pliku
 			fclose($fp);
 			return $dane;
 		} else {
@@ -288,7 +288,7 @@ class TagCloudCls
 		$fp = fopen($file, "w");
 		// zapisanie danych
 		fputs($fp, $zawartosc);
-		// zamkniêcie pliku
+		// zamkniÄ™cie pliku
 		fclose($fp);	
 	}
 	public function _getModNumber()
@@ -299,7 +299,7 @@ class TagCloudCls
 			$fp = fopen($file, "r");
 			// czytam danye
 			$dane = fread($fp, filesize($file));
-			// zamkniêcie pliku
+			// zamkniÄ™cie pliku
 			fclose($fp);
 			return $dane;
 		} else {
@@ -313,7 +313,7 @@ class TagCloudCls
 		$fp = fopen($file, "w");
 		// zapisanie danych
 		fputs($fp, $zawartosc);
-		// zamkniêcie pliku
+		// zamkniÄ™cie pliku
 		fclose($fp);	
 	}
 	public function _getSort()
@@ -324,7 +324,7 @@ class TagCloudCls
 			$fp = fopen($file, "r");
 			// czytam danye
 			$dane = fread($fp, filesize($file));
-			// zamkniêcie pliku
+			// zamkniÄ™cie pliku
 			fclose($fp);
 			return $dane;
 		} else {
@@ -338,7 +338,7 @@ class TagCloudCls
 		$fp = fopen($file, "w");
 		// zapisanie danych
 		fputs($fp, $zawartosc);
-		// zamkniêcie pliku
+		// zamkniÄ™cie pliku
 		fclose($fp);	
 	}
 	public function _getClearNumber() 
@@ -349,7 +349,7 @@ class TagCloudCls
 			$fp = fopen($file, "r");
 			// czytam danye
 			$dane = fread($fp, filesize($file));
-			// zamkniêcie pliku
+			// zamkniÄ™cie pliku
 			fclose($fp);
 			return $dane;
 		} else {
@@ -363,7 +363,7 @@ class TagCloudCls
 		$fp = fopen($file, "w");
 		// zapisanie danych
 		fputs($fp, $zawartosc);
-		// zamkniêcie pliku
+		// zamkniÄ™cie pliku
 		fclose($fp);	
 	}
 	public function _getShowMod()
@@ -374,7 +374,7 @@ class TagCloudCls
 			$fp = fopen($file, "r");
 			// czytam danye
 			$dane = fread($fp, filesize($file));
-			// zamkniêcie pliku
+			// zamkniÄ™cie pliku
 			fclose($fp);
 			return $dane;
 		} else {
