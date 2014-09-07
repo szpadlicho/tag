@@ -83,12 +83,15 @@ class Notatnik
         $tab = $this->__getNameTab();
         $i = 0;
         $sort = (@$_COOKIE['sort']=='1') ? $tab[1] : $tab[0] ;
+        echo '<div id="sort">';
         foreach ($sort as $wyn) {
                 $clear_int=explode('.', $wyn);
                 unset($clear_int[0]);
                 $clear_int=implode('.', $clear_int);
-                echo '<a id="link-'.$i++.'" class="link" href="?file='.$wyn.'">('.$clear_int.')</a>';
+                echo '<a id="filename-'.$wyn.'.txt" class="link-'.$i.' links" href="?file='.$wyn.'">('.$clear_int.')</a>';
+                $i++;
         }
+        echo '</div>';
     }
     public function __getInt()
     {
@@ -196,6 +199,7 @@ isset($_POST['setting']) ? header('location: setting.php') : 'error7';
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/style.php">
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.5.2.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
     <script type="text/javascript">
     <?php if (isset($_COOKIE['auth'])) { ?>
     (function($)
@@ -278,7 +282,43 @@ isset($_POST['setting']) ? header('location: setting.php') : 'error7';
             $('.del_confirm').css({'display':'inline'});       
         });
     });
-    </script>          
+    </script>
+    <script type="text/javascript">   
+        $(document).ready(function () {
+            //alert('redy');
+            $('#sort').sortable({
+                axis: 'xy',
+                stop: function (event, ui) {
+                    var data = $(this).sortable('serialize');
+                    //var href = $('a').attr('href');
+                    //alert(href);
+                    //$('#1').text(data);
+                    $.ajax({
+                        data: {data:data},
+                        type: 'POST',
+                        url: 'rename.php'
+                    });
+            }
+            });
+            //88
+            // $('textarea').click(function()
+            // {
+                // $.ajax({
+                    // type: "GET",
+                    // url: "rename.php",
+                    // pobierz: function (XMLHttpRequest) {
+                        // $("#divek").html("Trwa pobieranie danych.");
+                    // },
+                    // success: function(msg) {
+                        // $("#divek").html(msg);
+                    // },
+                    // error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        // $("#divek").html('Przepraszamy, dane nie mogą zostać wyśietlone.');
+                    // }
+                // });
+            // });
+        });
+    </script>    
     <script type="text/javascript"></script>
     <style type="text/css">
     <?php
@@ -287,10 +327,10 @@ isset($_POST['setting']) ? header('location: setting.php') : 'error7';
         $g = rand(70,255);
         $b = rand(70,255);
         ?>
-        #link-<?php echo $x; ?>{
+        .link-<?php echo $x; ?>{
             color: rgb(<?php echo $r; ?>,<?php echo $g; ?>,<?php echo $b; ?>);
         }
-        #link-<?php echo $x; ?>:hover{
+        .link-<?php echo $x; ?>:hover{
             color: rgb(<?php echo floor($r / 0.7); ?>,<?php echo floor($g / 0.7); ?>,<?php echo floor($b / 0.7); ?>);
         }
     <?php
@@ -301,6 +341,8 @@ isset($_POST['setting']) ? header('location: setting.php') : 'error7';
 </head>
 <body>
     <section id="site-place-holder">
+    <!--Query string: <span id='1'></span>
+    <div id="divek"></div>-->
         <p class="neon">Notatnik</p>
         <form method="POST">
             <?php if (isset($_COOKIE['auth'])) { 
