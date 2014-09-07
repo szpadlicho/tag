@@ -294,9 +294,14 @@ isset($_POST['setting']) ? header('location: setting.php') : 'error7';
                     //alert(href);
                     //$('#1').text(data);
                     $.ajax({
-                        data: {data:data},
+                        async: false,
                         type: 'POST',
-                        url: 'rename.php'
+                        url: 'rename.php',
+                        data: {data:data},
+                        success: function(){
+                            //alert('success');
+                            //location.href = 'index.php';
+                        }
                     });
             }
             });
