@@ -219,7 +219,7 @@ isset($_POST['setting']) ? header('location: setting.php') : 'error7';
     })(jQuery);
     $(document).ready(function()
     {
-        $('.link').click(function()
+        $('.links').click(function()
         {
             // Save when link clicked
             var txt = jQuery(".txtarea").val();
@@ -230,7 +230,11 @@ isset($_POST['setting']) ? header('location: setting.php') : 'error7';
                 async: false,
                 type: 'POST', 
                 url: 'save.php',
-                data: {text : txt, file : get}
+                data: {text : txt, file : get},
+                success: function(){
+                            //alert('save');
+                            //location.href = 'index.php';
+                        }
             });
         });
     });
