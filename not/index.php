@@ -493,7 +493,7 @@ if (isset($_POST['logout'])) {
 </body>
 </html>
 <?php
-    var_dump ($_POST);
+    //var_dump ($_POST);
     //var_dump ($_GET);
     //var_dump ($_SESSION);
     //var_dump ($_COOKIE);
