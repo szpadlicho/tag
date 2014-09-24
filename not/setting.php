@@ -52,6 +52,13 @@ isset($_POST['notepad']) ? header('location: index.php') : 'error2';
         </form>
     </section>
     <footer>
+        <?php
+            // echo $string = 'piotre';
+            // echo '<br />';
+            // echo $decode = base64_decode($string);
+            // echo '<br />';
+            // echo $encode = base64_encode($decode);
+        ?>
     </footer>
 </body>
 </html>

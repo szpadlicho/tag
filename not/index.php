@@ -193,7 +193,7 @@ class Notatnik
                 if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
                     // zaczynamy tworzenie
                     $fp = fopen($file, 'w');
-                    $zawartosc = $password.':&|&:'.$email;
+                    $zawartosc = md5($password).':&|&:'.$email;
                     // save data
                     fputs($fp, $zawartosc);
                     // close file
@@ -230,7 +230,7 @@ class Notatnik
                 //close file
                 fclose($fp);
                 $user = explode(':&|&:', $dane);
-                if ($user[0]==$password) {
+                if ($user[0] === md5($password)) {
                     //$_SESSION['user'] = $login;
                     //$_SESSION['password'] = true;
                     setcookie('auth',$login,time()+3600*12);
