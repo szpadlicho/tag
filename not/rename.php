@@ -14,6 +14,7 @@
 // }
 if (isset($_POST)) { 
     //setcookie ('asd', 'fgfh', time() - 3600);
+    $user = $_COOKIE['auth'];
     $get='';
     foreach ($_POST as $lol) {
         //__setTXT('qwe12', $lol);
@@ -26,7 +27,7 @@ if (isset($_POST)) {
     var_dump($foo);
     foreach ($foo as $key => $value) {
         $new=explode('.',$value);
-        rename('data/'.$value, 'data/'.$key.'.'.$new[1].'.txt');
+        rename('data/'.$user.'/'.$value, 'data/'.$user.'/'.$key.'.'.$new[1].'.txt');
     }
 }
 ?>

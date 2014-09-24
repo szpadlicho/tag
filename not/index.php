@@ -5,9 +5,14 @@ header('Content-Type: text/html; charset=utf-8');
 session_start();
 class Notatnik
 {
+    private $user;
+    public function __setUser($user)
+    {
+        $this->user = $user;
+    }
 	public function __setTXT($nazwa, $zawartosc)
     {
-		$file = 'data/'.$nazwa.'.txt';
+		$file = 'data/'.$this->user.'/'.$nazwa.'.txt';
 		//open file
 		$fp = fopen($file, 'w');
 		//save data
@@ -18,7 +23,7 @@ class Notatnik
 	}
 	public function __getTXT($nazwa)
     {
-		$file = 'data/'.$nazwa.'.txt';
+		$file = 'data/'.$this->user.'/'.$nazwa.'.txt';
 		if (file_exists($file)) {	
 			//open file
 			$fp = fopen($file, 'r');
@@ -40,7 +45,7 @@ class Notatnik
     public function __getNameTab()
     {
         // directory files data base
-        $dir = dirname(__FILE__).'/data/';
+        $dir = dirname(__FILE__).'/data/'.$this->user.'/';
         $arr = scandir($dir);
         $sort_n = array();
         foreach ($arr as $file) {
@@ -61,7 +66,7 @@ class Notatnik
         $wyn = array();
         foreach ($sort_n as $un) {
             $un = explode('.', $un);
-            $wyn[] .= $un[1].'.'.$un[0];            
+            @$wyn[] .= @$un[1].'.'.@$un[0];            
         }
         usort($wyn, 'strnatcasecmp');
         $sort_a=array();
@@ -99,6 +104,7 @@ class Notatnik
         $int = explode('.',$_GET['file']);
         return $int[0].'.';
     }
+    /*
     public function userIn()
     {   
         $_POST['password'] == 'piotrek' ? setcookie('auth','yes',time()+3600*12) : 'password error';
@@ -111,10 +117,11 @@ class Notatnik
         $this->__setTXT($_GET['file'], $_POST['txt']);
         header('location:');
     }
+    */
     public function changeName()
     {   
         $new = $this->__getInt().(str_replace('.', ',', $_POST['rename']));
-        rename(dirname(__FILE__).'/data/'.$_GET['file'].'.txt', dirname(__FILE__).'/data/'.$new.'.txt');
+        rename(dirname(__FILE__).'/data/'.$this->user.'/'.$_GET['file'].'.txt', dirname(__FILE__).'/data/'.$this->user.'/'.$new.'.txt');
         //header('location: ?file='.$new);
         //header('Location'.$_SERVER['PHP_SELF'].'?file='.$new);
         //$_GET['file'] = $new;        
@@ -128,8 +135,8 @@ class Notatnik
     }
     public function deleteName()
     {
-        unlink('data/'.$_GET['file'].'.txt');
-        $dir = dirname(__FILE__).'/data/';
+        unlink('data/'.$this->user.'/'.$_GET['file'].'.txt');
+        $dir = dirname(__FILE__).'/data/'.$this->user.'/';
         $arr = scandir($dir);
         $sort_n = array();
         foreach ($arr as $file) {
@@ -150,7 +157,7 @@ class Notatnik
             $name = explode('.', $pices);
             $add_int = $i.'.'.$name[1];
             $new_int[] .= $add_int;
-            rename('data/'.$pices.'.txt', 'data/'.$i.'.'.$name[1].'.txt');
+            rename('data/'.$this->user.'/'.$pices.'.txt', 'data/'.$this->user.'/'.$i.'.'.$name[1].'.txt');
             $i++;
         }
         //return $new_int;
@@ -165,30 +172,115 @@ class Notatnik
     // }
     public function createDir()
     {
-        if (! is_dir('data')) {
-            @mkdir('data');
-            chmod('data', 0777);
-            //exec ("find /data -type d -exec chmod 0750 {} +");
-            //find -type f -exec chmod 600 {} \;
+        if (! is_dir('data/'.$this->user)) {
+            @mkdir('data/'.$this->user);
+            chmod('data/'.$this->user, 0777);
             $this->__setTXT('0.start','');
-            //exec("chmod 0777 /data/*.txt");
-            //exec ("find /data -type f -exec chmod 0777 {} +");
         } 
         
     }
+    //*************************************************************//
+    public function createNew($login, $password, $re_password, $email)
+    {
+        if (! is_dir('users')) {
+            @mkdir('users');
+            chmod('users', 0777);
+        }
+        $file = 'users/'.$login.'.txt';
+		if (! file_exists($file)) {	
+            // Sprawdzam poprawność danych
+            if ($password === $re_password) {
+                if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    // zaczynamy tworzenie
+                    $fp = fopen($file, 'w');
+                    $zawartosc = $password.':&|&:'.$email;
+                    // save data
+                    fputs($fp, $zawartosc);
+                    // close file
+                    fclose($fp);
+                    // set premision
+                    chmod($file, 0777);
+                    //$_SESSION['user'] = $login;
+                    //$_SESSION['password'] = true;
+                    setcookie('auth',$login,time()+3600*12);
+                    header('location: ');
+                    //return 'Użytkownik '.$login.' dodany';
+                } else {
+                    return 'Błedna forma adresu email.';
+                }
+            } else {
+                return 'Hasła nie są zgodne.';
+            }
+        } else {
+            // użytkownik istnieje
+            return $login.' login zajęty.';
+        }
+    }
+    public function loginUser($login, $password)
+    {
+        $file = 'users/'.$login.'.txt';
+		if (file_exists($file)) {
+            //open file
+			$fp = fopen($file, 'r');
+            //check size
+            $size = filesize($file);
+            if ($size > 0 ) {
+                //read file
+                $dane = fread($fp, $size);
+                //close file
+                fclose($fp);
+                $user = explode(':&|&:', $dane);
+                if ($user[0]==$password) {
+                    //$_SESSION['user'] = $login;
+                    //$_SESSION['password'] = true;
+                    setcookie('auth',$login,time()+3600*12);
+                    //header('location: ?file='.$_GET['file']);
+                    header('location: ?file='.$_GET['file']);
+                    //return $login.' zalogowany';
+                    //return $user;
+                } else {
+                    return 'Błędne hasło';
+                }
+            } else {
+                return 'Dane nie istnieją';
+            }
+        } else {
+            return 'Błędny bądź nie istniejący login.';
+        }
+    }
+    public function logoutUser()
+    {   
+        $this->__setTXT($_GET['file'], $_POST['txt']);
+        setcookie ('auth', '', time() - 3600);
+        header('location:');
+    }
 }
-$rec = new Notatnik();
+$rec = new Notatnik;
+$rec->__setUser(@$_COOKIE['auth']);
 $rec->createDir();
+//isset($_COOKIE['auth']) ? $user = $_COOKIE['auth'] : 'zaloguj się';
 ! isset($_GET['file']) ? $_GET['file'] = '0.start' : $error = 'Utworz nowy plik' ;
 isset($_POST['save']) ? $rec->__setTXT($_GET['file'], $_POST['txt']) : 'error1';
 isset($_POST['add']) && ! empty($_POST['new_name']) ? $rec->__setTXT($_SESSION['count'].'.'.(str_replace('.', ',', $_POST['new_name'])), '') : 'error2';
 isset($_POST['confirm']) && !empty($_POST['rename']) ? $rec->changeName() : 'error2';
-isset($_POST['login_user']) && !empty($_POST['password']) ? $rec->userIn() : 'error3';
-isset($_POST['logout_user']) ? $rec->userOut() : 'error4';
+//isset($_POST['login_user']) && !empty($_POST['password']) ? $rec->userIn() : 'error3';
+//isset($_POST['logout_user']) ? $rec->userOut() : 'error4';
 $rec->__getNameTab();//wywołuje żeby sesja count sie zapisała dla css kolorowego
 //var_dump($sort);
 isset($_POST['del_confirm']) ? $rec->deleteName() : 'error5';
 isset($_POST['setting']) ? header('location: setting.php') : 'error7';
+/***************************************************************************************/
+$obj_user = clone $rec;
+if (isset($_POST['save_user']) && ! empty($_POST['login'])) {
+   echo $obj_user->createNew($_POST['login'], $_POST['password'], $_POST['re_password'], $_POST['email']);
+}
+if (isset($_POST['enter'])) {
+    echo $obj_user->loginUser($_POST['login'], $_POST['password']);
+    //var_dump($obj_user->loginUser($_POST['login'], $_POST['password']));
+}
+if (isset($_POST['logout'])) {
+    $obj_user->logoutUser();
+}
 ?>
 <!DOCTYPE HTML>
 <html lang="pl">
@@ -356,8 +448,15 @@ isset($_POST['setting']) ? header('location: setting.php') : 'error7';
         <form method="POST">
             <?php if (isset($_COOKIE['auth'])) { 
                 $rec->showName();
-            } else { ?>
-                <input type="password" name="password" /><input type="submit" name="login_user" value="Zaloguj" />
+            } elseif (isset($_POST['create_user'])) { ?>
+                <input type="text" name="login" value="admin" />
+                <input type="text" name="password" value="user" />
+                <input type="text" name="re_password" value="user" />
+                <input type="text" name="email" value="szpad@op.pl" />
+                <input type="submit" name="save_user" value="Zapisz" />
+                <input type="submit" name="cancel" value="Anuluj" />
+            <?php } else { ?>
+                <input type="text" name="login" /><input type="password" name="password" /><input type="submit" name="enter" value="Zaloguj" /><input type="submit" name="create_user" value="Stwórz Nowego" />
             <?php } ?>          
         </form>
         <form method="POST">
@@ -384,7 +483,7 @@ isset($_POST['setting']) ? header('location: setting.php') : 'error7';
                     <label><input class="radio" type="radio" <?php echo (@$_COOKIE['sort']=='0') ? 'checked="checked"' : '';  ?> name="sorting" value="0" /><label>Kolejność tworzenia</label></label>
                     <label><input class="radio" type="radio" <?php echo (@$_COOKIE['sort']=='1') ? 'checked="checked"' : '';  ?> name="sorting" value="1" /><label>Alfabetycznie</label></label>
                 </span>
-                <input class="right" type="submit" name="logout_user" value="Wyloguj" />
+                <input class="right" type="submit" name="logout" value="Wyloguj" />
                 <input id="setting" class="right" type="submit" name="setting" value="Ustawienia" />
             <?php } ?>
         </form>
@@ -394,7 +493,7 @@ isset($_POST['setting']) ? header('location: setting.php') : 'error7';
 </body>
 </html>
 <?php
-    //var_dump ($_POST);
+    var_dump ($_POST);
     //var_dump ($_GET);
     //var_dump ($_SESSION);
     //var_dump ($_COOKIE);
