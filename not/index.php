@@ -449,11 +449,11 @@ if (isset($_POST['logout'])) {
             <?php if (isset($_COOKIE['auth'])) { 
                 $rec->showName();
             } elseif (isset($_POST['create_user'])) { ?>
-                <input type="text" name="login" value="admin" />
-                <input type="text" name="password" value="user" />
-                <input type="text" name="re_password" value="user" />
-                <input type="text" name="email" value="szpad@op.pl" />
-                <input type="submit" name="save_user" value="Zapisz" />
+                <input type="text" name="login" placeholder="login" />
+                <input type="text" name="password" placeholder="hasło" />
+                <input type="text" name="re_password" placeholder="powtórz hasło" />
+                <input type="text" name="email" value="email" />
+                <input type="submit" name="save_user" value="Dodaj" />
                 <input type="submit" name="cancel" value="Anuluj" />
             <?php } else { ?>
                 <input type="text" name="login" /><input type="password" name="password" /><input type="submit" name="enter" value="Zaloguj" /><input type="submit" name="create_user" value="Stwórz Nowego" />
