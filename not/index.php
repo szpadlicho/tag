@@ -21,7 +21,7 @@ class Notatnik
 		fclose($fp);
         chmod($file, 0777);//dla servera linux dostep
 	}
-	public function __getTXT($nazwa)
+	public function __getTXT22($nazwa)
     {
 		$file = 'data/'.$this->user.'/'.$nazwa.'.txt';
 		if (file_exists($file)) {	
@@ -35,6 +35,41 @@ class Notatnik
                 //close file
                 fclose($fp);
                 return $dane;
+            } else {
+                return 'pusty';
+            }
+		} else {
+			return 'error';
+		}
+	}
+    public function __getTXT($nazwa)
+    {
+		$file = 'data/'.$this->user.'/'.$nazwa.'.txt';
+		if (file_exists($file)) {	
+			//open file
+			$fp = fopen($file, 'r');
+			//check size
+            $size = filesize($file);
+            if ($size > 0 ) {
+                $dpass = fgets($fp);
+                fclose($fp);
+                $security = explode (':',$dpass);
+                $security = preg_replace('~[\r\n]+~', '', $security);//delete enter from end line
+                if ($security[0] == 'pass') {
+                    if ($security[1] == @$_SESSION[$nazwa]) {
+                        $fp = fopen($file, 'r');
+                        $dane = fread($fp, $size);
+                        return $dane;
+                        fclose($fp);
+                    } else {
+                        return 'Enter password';
+                    }
+                } else {
+                    $fp = fopen($file, 'r');
+                    $dane = fread($fp, $size);
+                    return $dane;
+                    fclose($fp);
+                }             
             } else {
                 return 'pusty';
             }
@@ -173,7 +208,7 @@ class Notatnik
     public function createDir()
     {
         if (! is_dir('data/'.$this->user)) {
-            @mkdir('data/'.$this->user);
+            @mkdir('data/'.$this->user, 0777, true);
             chmod('data/'.$this->user, 0777);
             $this->__setTXT('0.start','');
         } 
@@ -280,6 +315,13 @@ if (isset($_POST['enter'])) {
 }
 if (isset($_POST['logout'])) {
     $obj_user->logoutUser();
+}
+/**************************************************************************************/
+if (isset($_POST['file_protect_enter'])){
+    $_SESSION[$_GET['file']]=$_POST['file_protect_password'];
+}
+if (isset($_POST['file_protect'])){
+    unset($_SESSION[$_GET['file']]);
 }
 ?>
 <!DOCTYPE HTML>
@@ -478,6 +520,12 @@ if (isset($_POST['logout'])) {
                     <input class="del_confirm" type="submit" name="del_confirm" value="Tak" />
                     <input class="del_confirm" type="submit" name="anuluj" value="Nie" />
                 </span>
+                <?php if ($rec->__getTXT($_GET['file']) == 'Enter password') { ?>  
+                    <input type="text" name="file_protect_password" />
+                    <input type="submit" name="file_protect_enter" value="Odblokuj" />
+                <?php } else { ?>
+                    <input type="submit" name="file_protect" value="Zablokuj" />
+                <?php } ?>
                 <span class="bottom">
                     Sortowanie :
                     <label><input class="radio" type="radio" <?php echo (@$_COOKIE['sort']=='0') ? 'checked="checked"' : '';  ?> name="sorting" value="0" /><label>Kolejność tworzenia</label></label>
