@@ -304,7 +304,6 @@ class Notatnik
     }
     public function logoutUser()
     {   
-        $this->__setTXT($_GET['file'], $_POST['txt']);
         setcookie ('auth', '', time() - 3600);
         header('location: index.php');
     }
@@ -354,7 +353,7 @@ if (isset($_POST['file_protect'])){
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.5.2.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
     <script type="text/javascript">
-    <?php if (isset($_COOKIE['auth'])) { ?>
+    <?php if (isset($_COOKIE['auth'])) { // && ($rec->__getTXT($_GET['file'])  != 'Enter password')?>
     (function($)
     {
         $(document).ready(function() 
@@ -390,9 +389,9 @@ if (isset($_POST['file_protect'])){
                         }
             });
         });
-        $('.security').click(function()
+        $('.security, input[name=logout]').click(function()
         {
-            // Save when link clicked
+            // Save when logout or protect clicked
             var txt = jQuery(".txtarea").val();
             //alert(txt);
             var get = <?php echo json_encode($_GET['file']); ?>;
@@ -558,7 +557,7 @@ if (isset($_POST['file_protect'])){
                     <input class="del_confirm" type="submit" name="anuluj" value="Nie" />
                 </span>
                 <?php if ($rec->checkSecurity($_GET['file']) == true) { ?>
-                    <?php if ($rec->__getTXT($_GET['file']) == 'Enter password') { ?>  
+                    <?php if (! isset($_SESSION[$_GET['file']])) { ?>  
                         <input type="text" name="file_protect_password" />
                         <input class="" type="submit" name="file_protect_enter" value="Odblokuj" />
                     <?php } else { ?>
