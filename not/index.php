@@ -55,6 +55,7 @@ class Notatnik
                 fclose($fp);
                 $security = explode (':',$dpass);
                 $security = preg_replace('~[\r\n]+~', '', $security);//delete enter from end line
+                //$mod = $this->checkSecurity($nazwa);
                 if ($security[0] == 'pass') {
                     if ($security[1] == @$_SESSION[$nazwa]) {
                         $fp = fopen($file, 'r');
@@ -77,6 +78,24 @@ class Notatnik
 			return 'error';
 		}
 	}
+    public function checkSecurity($nazwa)
+    {
+        $file = 'data/'.$this->user.'/'.$nazwa.'.txt';
+        if (file_exists($file)) {
+            $fp = fopen($file, 'r');
+            $size = filesize($file);
+            $chsec = fgets($fp);
+            fclose($fp);
+            $security = explode (':',$chsec);
+            if ($security[0] == 'pass') {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
     public function __getNameTab()
     {
         // directory files data base
@@ -371,10 +390,28 @@ if (isset($_POST['file_protect'])){
                         }
             });
         });
+        $('.security').click(function()
+        {
+            // Save when link clicked
+            var txt = jQuery(".txtarea").val();
+            //alert(txt);
+            var get = <?php echo json_encode($_GET['file']); ?>;
+            //alert(get);
+            $.ajax({ 
+                async: false,
+                type: 'POST', 
+                url: 'save.php',
+                data: {text : txt, file : get},
+                success: function(){
+                            //alert('save');
+                            //location.href = 'index.php';
+                        }
+            });
+        });
     });
     $(document).ready(function()
     {
-        // Save when sorting change
+        // sorting change
         $('input[name=sorting]').click(function()
         {
             // Set cookie when sorting click
@@ -520,11 +557,13 @@ if (isset($_POST['file_protect'])){
                     <input class="del_confirm" type="submit" name="del_confirm" value="Tak" />
                     <input class="del_confirm" type="submit" name="anuluj" value="Nie" />
                 </span>
-                <?php if ($rec->__getTXT($_GET['file']) == 'Enter password') { ?>  
-                    <input type="text" name="file_protect_password" />
-                    <input type="submit" name="file_protect_enter" value="Odblokuj" />
-                <?php } else { ?>
-                    <input type="submit" name="file_protect" value="Zablokuj" />
+                <?php if ($rec->checkSecurity($_GET['file']) == true) { ?>
+                    <?php if ($rec->__getTXT($_GET['file']) == 'Enter password') { ?>  
+                        <input type="text" name="file_protect_password" />
+                        <input class="" type="submit" name="file_protect_enter" value="Odblokuj" />
+                    <?php } else { ?>
+                        <input class="security"  type="submit" name="file_protect" value="Zablokuj" />
+                    <?php } ?>
                 <?php } ?>
                 <span class="bottom">
                     Sortowanie :
