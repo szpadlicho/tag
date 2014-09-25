@@ -252,7 +252,7 @@ class Notatnik
     {   
         $this->__setTXT($_GET['file'], $_POST['txt']);
         setcookie ('auth', '', time() - 3600);
-        header('location:');
+        header('location: index.php');
     }
 }
 $rec = new Notatnik;
