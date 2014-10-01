@@ -313,7 +313,7 @@ $rec->__setUser(@$_COOKIE['auth']);
 $rec->createDir();
 //isset($_COOKIE['auth']) ? $user = $_COOKIE['auth'] : 'zaloguj się';
 ! isset($_GET['file']) ? $_GET['file'] = '0.start' : $error = 'Utworz nowy plik' ;
-isset($_POST['save']) ? $rec->__setTXT($_GET['file'], $_POST['txt']) : 'error1';
+(isset($_POST['save']) && (trim(@$_POST['txt']) != 'Enter password') && isset($_POST['txt'])) ? $rec->__setTXT($_GET['file'], $_POST['txt']) : 'error1';
 isset($_POST['add']) && ! empty($_POST['new_name']) ? $rec->__setTXT($_SESSION['count'].'.'.(str_replace('.', ',', $_POST['new_name'])), '') : 'error2';
 isset($_POST['confirm']) && !empty($_POST['rename']) ? $rec->changeName() : 'error2';
 //isset($_POST['login_user']) && !empty($_POST['password']) ? $rec->userIn() : 'error3';
@@ -350,14 +350,45 @@ if (isset($_POST['file_protect'])){
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/style.php">
-    <script type="text/javascript" src="http://code.jquery.com/jquery-1.5.2.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
     <script type="text/javascript">
     <?php if (isset($_COOKIE['auth'])) { // && ($rec->__getTXT($_GET['file'])  != 'Enter password')?>
-    (function($)
-    {
-        $(document).ready(function() 
-        {
+    
+    $(document).ready(function(){
+
+        var can = 1;
+        var txt2 = $.trim($(".txtarea").val());
+        var txt3 = "Enter password";
+        if (txt2 != txt3) {
+            //alert(txt2);
+            
+            can = 0;
+            //return can;
+        } else {
+            $("textarea").attr("disabled", true);
+        }
+        var oldVal = "";
+        $(".txtarea").on("change keyup paste", function() {
+            //var currentVal = $(this).val();
+            //if(currentVal == oldVal) {
+                //return; //check to prevent multiple simultaneous triggers
+            //}
+            
+            //oldVal = currentVal;
+            //action to be performed on textarea changed
+            //alert("changed!");
+            if (txt2 != txt3) {
+                //alert(txt2);
+                
+                can = 0;
+                //return can;
+            } else {
+                $("textarea").attr("disabled", true);
+            }
+        });
+        //alert(can);
+        if (can == 0) {
             // Save Form alt+s
             $(window).keypress(function(event) 
             {
@@ -367,46 +398,43 @@ if (isset($_POST['file_protect'])){
                 return false;
                 alert('save');
             });
-        });
-    })(jQuery);
-    $(document).ready(function()
-    {
-        $('.links').click(function()
-        {
             // Save when link clicked
-            var txt = jQuery(".txtarea").val();
-            //alert(txt);
-            var get = <?php echo json_encode($_GET['file']); ?>;
-            //alert(get);
-            $.ajax({ 
-                async: false,
-                type: 'POST', 
-                url: 'save.php',
-                data: {text : txt, file : get},
-                success: function(){
-                            //alert('save');
-                            //location.href = 'index.php';
-                        }
+            $('.links').click(function()
+            {
+                var txt = $(".txtarea").val();
+                //alert(txt);
+                var get = <?php echo json_encode($_GET['file']); ?>;
+                //alert(get);
+                $.ajax({ 
+                    async: false,
+                    type: 'POST', 
+                    url: 'save.php',
+                    data: {text : txt, file : get},
+                    success: function(){
+                                //alert('save');
+                                //location.href = 'index.php';
+                            }
+                });
             });
-        });
-        $('.security, input[name=logout]').click(function()
-        {
             // Save when logout or protect clicked
-            var txt = jQuery(".txtarea").val();
-            //alert(txt);
-            var get = <?php echo json_encode($_GET['file']); ?>;
-            //alert(get);
-            $.ajax({ 
-                async: false,
-                type: 'POST', 
-                url: 'save.php',
-                data: {text : txt, file : get},
-                success: function(){
-                            //alert('save');
-                            //location.href = 'index.php';
-                        }
+            $('.security, input[name=logout]').click(function()
+            {
+                var txt = $(".txtarea").val();
+                //alert(txt);
+                var get = <?php echo json_encode($_GET['file']); ?>;
+                //alert(get);
+                $.ajax({ 
+                    async: false,
+                    type: 'POST', 
+                    url: 'save.php',
+                    data: {text : txt, file : get},
+                    success: function(){
+                                //alert('save');
+                                //location.href = 'index.php';
+                            }
+                });
             });
-        });
+        }
     });
     $(document).ready(function()
     {
