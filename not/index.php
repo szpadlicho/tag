@@ -55,7 +55,6 @@ class Notatnik
                 fclose($fp);
                 $security = explode (':',$dpass);
                 $security = preg_replace('~[\r\n]+~', '', $security);//delete enter from end line
-                //$mod = $this->checkSecurity($nazwa);
                 if ($security[0] == 'pass') {
                     if ($security[1] == @$_SESSION[$nazwa]) {
                         $fp = fopen($file, 'r');
@@ -154,24 +153,9 @@ class Notatnik
     }
     public function __getInt()
     {
-        //$int = filter_var($_GET['file'], FILTER_SANITIZE_NUMBER_INT);
         $int = explode('.',$_GET['file']);
         return $int[0].'.';
     }
-    /*
-    public function userIn()
-    {   
-        $_POST['password'] == 'piotrek' ? setcookie('auth','yes',time()+3600*12) : 'password error';
-        header('location: ?file='.$_GET['file']);
-        
-    }
-    public function userOut()
-    {   
-        setcookie ('auth', '', time() - 3600);
-        $this->__setTXT($_GET['file'], $_POST['txt']);
-        header('location:');
-    }
-    */
     public function changeName()
     {   
         $new = $this->__getInt().(str_replace('.', ',', $_POST['rename']));
@@ -213,15 +197,12 @@ class Notatnik
             $new_int[] .= $add_int;
             rename('data/'.$this->user.'/'.$pices.'.txt', 'data/'.$this->user.'/'.$i.'.'.$name[1].'.txt');
             $i++;
-        }
-        //return $new_int;
-        //header('location: ?file=0.Start');     
-        header('Refresh:0; url='.$_SERVER['PHP_SELF']); 
-        //echo("<script>location.href = 'index.php?file=0.start';</script>");
+        }   
+        header('Refresh:0; url='.$_SERVER['PHP_SELF']);
     }
     // public function __setSortMod($mod)
     // {
-        // setcookie ('sort', $mod, time() + 3600*24*30);
+        // setcookie ('sort', $mod, time() + 3600*24*30*12);
         // //header('location:');
     // }
     public function createDir()
@@ -254,11 +235,8 @@ class Notatnik
                     fclose($fp);
                     // set premision
                     chmod($file, 0777);
-                    //$_SESSION['user'] = $login;
-                    //$_SESSION['password'] = true;
-                    setcookie('auth',$login,time()+3600*12);
+                    setcookie('auth',$login,time()+3600*12);// pol dnia pamieta logowanie
                     header('location: ');
-                    //return 'Użytkownik '.$login.' dodany';
                 } else {
                     return 'Błedna forma adresu email.';
                 }
@@ -285,13 +263,8 @@ class Notatnik
                 fclose($fp);
                 $user = explode(':&|&:', $dane);
                 if ($user[0] === md5($password)) {
-                    //$_SESSION['user'] = $login;
-                    //$_SESSION['password'] = true;
-                    setcookie('auth',$login,time()+3600*12);
-                    //header('location: ?file='.$_GET['file']);
+                    setcookie('auth',$login,time()+3600*12);// pol dnia pamieta logowanie
                     header('location: ?file='.$_GET['file']);
-                    //return $login.' zalogowany';
-                    //return $user;
                 } else {
                     return 'Błędne hasło';
                 }
@@ -311,15 +284,12 @@ class Notatnik
 $rec = new Notatnik;
 $rec->__setUser(@$_COOKIE['auth']);
 $rec->createDir();
-//isset($_COOKIE['auth']) ? $user = $_COOKIE['auth'] : 'zaloguj się';
+
 ! isset($_GET['file']) ? $_GET['file'] = '0.start' : $error = 'Utworz nowy plik' ;
 (isset($_POST['save']) && (trim(@$_POST['txt']) != 'Enter password') && isset($_POST['txt'])) ? $rec->__setTXT($_GET['file'], $_POST['txt']) : 'error1';
 isset($_POST['add']) && ! empty($_POST['new_name']) ? $rec->__setTXT($_SESSION['count'].'.'.(str_replace('.', ',', $_POST['new_name'])), '') : 'error2';
 isset($_POST['confirm']) && !empty($_POST['rename']) ? $rec->changeName() : 'error2';
-//isset($_POST['login_user']) && !empty($_POST['password']) ? $rec->userIn() : 'error3';
-//isset($_POST['logout_user']) ? $rec->userOut() : 'error4';
 $rec->__getNameTab();//wywołuje żeby sesja count sie zapisała dla css kolorowego
-//var_dump($sort);
 isset($_POST['del_confirm']) ? $rec->deleteName() : 'error5';
 isset($_POST['setting']) ? header('location: setting.php') : 'error7';
 /***************************************************************************************/
@@ -329,7 +299,6 @@ if (isset($_POST['save_user']) && ! empty($_POST['login'])) {
 }
 if (isset($_POST['enter'])) {
     echo $obj_user->loginUser($_POST['login'], $_POST['password']);
-    //var_dump($obj_user->loginUser($_POST['login'], $_POST['password']));
 }
 if (isset($_POST['logout'])) {
     $obj_user->logoutUser();
@@ -350,10 +319,14 @@ if (isset($_POST['file_protect'])){
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/style.php">
+    <!--
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.8.2.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+    -->
+    <script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
+    <script type="text/javascript" src="js/jquery-ui.min.js"></script>
     <script type="text/javascript">
-    <?php if (isset($_COOKIE['auth'])) { // && ($rec->__getTXT($_GET['file'])  != 'Enter password')?>
+    <?php if (isset($_COOKIE['auth'])) { ?>
     
     $(document).ready(function(){
 
@@ -389,6 +362,7 @@ if (isset($_POST['file_protect'])){
         });
         //alert(can);
         if (can == 0) {
+            <?php if (isset($_COOKIE['savemod0'])) { ?>
             // Save Form alt+s
             $(window).keypress(function(event) 
             {
@@ -398,6 +372,8 @@ if (isset($_POST['file_protect'])){
                 return false;
                 alert('save');
             });
+            <?php } ?>
+            <?php if (isset($_COOKIE['savemod1'])) { ?>
             // Save when link clicked
             $('.links').click(function()
             {
@@ -416,8 +392,10 @@ if (isset($_POST['file_protect'])){
                             }
                 });
             });
-            // Save when logout or protect clicked
-            $('.security, input[name=logout]').click(function()
+            <?php } ?>
+            <?php if (isset($_COOKIE['savemod2'])) { ?>
+            // Save when protect clicked
+            $('.security').click(function()
             {
                 var txt = $(".txtarea").val();
                 //alert(txt);
@@ -434,25 +412,46 @@ if (isset($_POST['file_protect'])){
                             }
                 });
             });
+            <?php } ?>
+            <?php if (isset($_COOKIE['savemod3'])) { ?>
+            // Save when logout
+            $('input[name=logout]').click(function()
+            {
+                var txt = $(".txtarea").val();
+                //alert(txt);
+                var get = <?php echo json_encode($_GET['file']); ?>;
+                //alert(get);
+                $.ajax({ 
+                    async: false,
+                    type: 'POST', 
+                    url: 'save.php',
+                    data: {text : txt, file : get},
+                    success: function(){
+                                //alert('save');
+                                //location.href = 'index.php';
+                            }
+                });
+            });
+            <?php } ?>
         }
     });
-    $(document).ready(function()
-    {
-        // sorting change
-        $('input[name=sorting]').click(function()
-        {
-            // Set cookie when sorting click
-            var mod = $(this).val();
-            //alert(mod);
-            $.ajax({ 
-                async: false,
-                type: 'POST', 
-                url: 'setcookie.php',
-                data: {value : mod}
-            });
-            $("form input[name=anuluj]").click();//anuluj tylko po to by odświeżyć strone     
-        });
-    });
+    // $(document).ready(function()
+    // {
+        // // sorting change
+        // $('input[name=sorting]').click(function()
+        // {
+            // // Set cookie when sorting click
+            // var mod = $(this).val();
+            // //alert(mod);
+            // $.ajax({ 
+                // async: false,
+                // type: 'POST', 
+                // url: 'setcookie.php',
+                // data: {value : mod}
+            // });
+            // $("form input[name=anuluj]").click();//anuluj tylko po to by odświeżyć strone     
+        // });
+    // });
     <?php } ?>
     $(document).ready(function()
     {
@@ -548,8 +547,6 @@ if (isset($_POST['file_protect'])){
 </head>
 <body>
     <section id="site-place-holder">
-    <!--Query string: <span id='1'></span>
-    <div id="divek"></div>-->
         <p class="neon">Notatnik</p>
         <form method="POST">
             <?php if (isset($_COOKIE['auth'])) { 
@@ -592,11 +589,13 @@ if (isset($_POST['file_protect'])){
                         <input class="security"  type="submit" name="file_protect" value="Zablokuj" />
                     <?php } ?>
                 <?php } ?>
+                <!--
                 <span class="bottom">
                     Sortowanie :
-                    <label><input class="radio" type="radio" <?php echo (@$_COOKIE['sort']=='0') ? 'checked="checked"' : '';  ?> name="sorting" value="0" /><label>Kolejność tworzenia</label></label>
-                    <label><input class="radio" type="radio" <?php echo (@$_COOKIE['sort']=='1') ? 'checked="checked"' : '';  ?> name="sorting" value="1" /><label>Alfabetycznie</label></label>
+                    <label><input class="radio" type="radio" <?php //echo (@$_COOKIE['sort']=='0') ? 'checked="checked"' : '';  ?> name="sorting" value="0" /><label>Kolejność tworzenia</label></label>
+                    <label><input class="radio" type="radio" <?php //echo (@$_COOKIE['sort']=='1') ? 'checked="checked"' : '';  ?> name="sorting" value="1" /><label>Alfabetycznie</label></label>
                 </span>
+                -->
                 <input class="right" type="submit" name="logout" value="Wyloguj" />
                 <input id="setting" class="right" type="submit" name="setting" value="Ustawienia" />
             <?php } ?>
