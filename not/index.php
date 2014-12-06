@@ -528,6 +528,19 @@ if (isset($_POST['file_protect'])){
                     // }
                 // });
             // });
+            /**
+            *   Blokowanie znaków specjalnych w inputach
+            **/
+            $('input').bind('keypress', function (event) {
+                var regex = new RegExp("^[a-zA-Z0-9]+$");
+                var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+                if (!regex.test(key) && event.which != 8) {//8 backspace
+                   console.log('zablokowane');
+                   console.log(event.which);
+                   event.preventDefault();
+                   return false;
+                }
+            });
         });
     </script>    
     <script type="text/javascript"></script>
