@@ -21,27 +21,27 @@ class Notatnik
 		fclose($fp);
         chmod($file, 0777);//dla servera linux dostep
 	}
-	public function __getTXT22($nazwa)
-    {
-		$file = 'data/'.$this->user.'/'.$nazwa.'.txt';
-		if (file_exists($file)) {	
-			//open file
-			$fp = fopen($file, 'r');
-			//check size
-            $size = filesize($file);
-            if ($size > 0 ) {
-                //read file
-                $dane = fread($fp, $size);
-                //close file
-                fclose($fp);
-                return $dane;
-            } else {
-                return 'pusty';
-            }
-		} else {
-			return 'error';
-		}
-	}
+	// public function __getTXT22($nazwa)
+    // {
+		// $file = 'data/'.$this->user.'/'.$nazwa.'.txt';
+		// if (file_exists($file)) {	
+			// //open file
+			// $fp = fopen($file, 'r');
+			// //check size
+            // $size = filesize($file);
+            // if ($size > 0 ) {
+                // //read file
+                // $dane = fread($fp, $size);
+                // //close file
+                // fclose($fp);
+                // return $dane;
+            // } else {
+                // return 'pusty';
+            // }
+		// } else {
+			// return 'error';
+		// }
+	// }
     public function __getTXT($nazwa)
     {
 		$file = 'data/'.$this->user.'/'.$nazwa.'.txt';
@@ -262,8 +262,13 @@ class Notatnik
                 //close file
                 fclose($fp);
                 $user = explode(':&|&:', $dane);
-                if ($user[0] === md5($password)) {
+                if ($user[0] === md5($password) && ! isset($_POST['remember_me'])) {
                     setcookie('auth',$login,time()+3600*12);// pol dnia pamieta logowanie
+                    /*?><script> alert('12h'); </script><?php*/
+                    header('location: ?file='.$_GET['file']);
+                } elseif ($user[0] === md5($password) && isset($_POST['remember_me'])) {
+                    setcookie('auth',$login,time()+3600*24*365);// rok pamieta logowanie
+                    /*?><script> alert('rok'); </script><?php*/
                     header('location: ?file='.$_GET['file']);
                 } else {
                     return 'Błędne hasło';
@@ -559,7 +564,7 @@ if (isset($_POST['file_protect'])){
                 <input type="submit" name="save_user" value="Dodaj" />
                 <input type="submit" name="cancel" value="Anuluj" />
             <?php } else { ?>
-                <input type="text" name="login" /><input type="password" name="password" /><input type="submit" name="enter" value="Zaloguj" /><input type="submit" name="create_user" value="Stwórz Nowego" />
+                <input type="text" name="login" /><input type="password" name="password" /><input type="submit" name="enter" value="Zaloguj" /><input type="submit" name="create_user" value="Stwórz Nowego" /><input type="checkbox" name="remember_me" />Zapamiętaj mnie
             <?php } ?>          
         </form>
         <form method="POST">
@@ -583,7 +588,7 @@ if (isset($_POST['file_protect'])){
                 </span>
                 <?php if ($rec->checkSecurity($_GET['file']) == true) { ?>
                     <?php if (! isset($_SESSION[$_GET['file']])) { ?>  
-                        <input type="text" name="file_protect_password" />
+                        <input type="password" name="file_protect_password" />
                         <input class="" type="submit" name="file_protect_enter" value="Odblokuj" />
                     <?php } else { ?>
                         <input class="security"  type="submit" name="file_protect" value="Zablokuj" />
@@ -616,4 +621,33 @@ if (isset($_POST['file_protect'])){
     //}
     //echo $_SESSION['count'];
     //unset($_SESSION['count'])
+?>
+<?php
+// define("ENCRYPTION_KEY", "!@#$%^&*");
+// $string = "This is the original data string!";
+
+// echo $encrypted = encrypt($string, ENCRYPTION_KEY);
+// echo "<br />";
+// echo $decrypted = decrypt($encrypted, ENCRYPTION_KEY);
+
+// /**
+ // * Returns an encrypted & utf8-encoded
+ // */
+ 
+// function encrypt($pure_string, $encryption_key) {
+    // $iv_size = mcrypt_get_iv_size(MCRYPT_BLOWFISH, MCRYPT_MODE_ECB);
+    // $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
+    // $encrypted_string = mcrypt_encrypt(MCRYPT_BLOWFISH, $encryption_key, utf8_encode($pure_string), MCRYPT_MODE_ECB, $iv);
+    // return $encrypted_string;
+// }
+
+// /**
+ // * Returns decrypted original string
+ // */
+// function decrypt($encrypted_string, $encryption_key) {
+    // $iv_size = mcrypt_get_iv_size(MCRYPT_BLOWFISH, MCRYPT_MODE_ECB);
+    // $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
+    // $decrypted_string = mcrypt_decrypt(MCRYPT_BLOWFISH, $encryption_key, $encrypted_string, MCRYPT_MODE_ECB, $iv);
+    // return $decrypted_string;
+// }
 ?>
