@@ -6,6 +6,8 @@ session_start();
 class Notatnik
 {
     private $user;
+    private $encryption_key = 'mysecretkey'; // for text coding/decoding
+    private $crypt = 0; // for text coding/decoding
     public function __setUser($user)
     {
         $this->user = $user;
@@ -13,52 +15,29 @@ class Notatnik
 	public function __setTXT($nazwa, $zawartosc)
     {
 		$file = 'data/'.$this->user.'/'.$nazwa.'.txt';
-		//open file
 		$fp = fopen($file, 'w');
-		//save data
+        $this->crypt == 1 ? $zawartosc = $this->encrypt($zawartosc) : $sec = 'off'; // for text coding/decoding
 		fputs($fp, $zawartosc);
-		//close file
 		fclose($fp);
-        chmod($file, 0777);//dla servera linux dostep
+        chmod($file, 0777);//for Linux access
 	}
-	// public function __getTXT22($nazwa)
-    // {
-		// $file = 'data/'.$this->user.'/'.$nazwa.'.txt';
-		// if (file_exists($file)) {	
-			// //open file
-			// $fp = fopen($file, 'r');
-			// //check size
-            // $size = filesize($file);
-            // if ($size > 0 ) {
-                // //read file
-                // $dane = fread($fp, $size);
-                // //close file
-                // fclose($fp);
-                // return $dane;
-            // } else {
-                // return 'pusty';
-            // }
-		// } else {
-			// return 'error';
-		// }
-	// }
     public function __getTXT($nazwa)
     {
 		$file = 'data/'.$this->user.'/'.$nazwa.'.txt';
-		if (file_exists($file)) {	
-			//open file
+		if (file_exists($file)) {
 			$fp = fopen($file, 'r');
-			//check size
             $size = filesize($file);
             if ($size > 0 ) {
                 $dpass = fgets($fp);
+                $this->crypt == 1 ? $dpass = $this->decrypt($dpass) : $sec = 'off'; // for text coding/decoding
                 fclose($fp);
                 $security = explode (':',$dpass);
-                $security = preg_replace('~[\r\n]+~', '', $security);//delete enter from end line
+                $security = preg_replace('~[\r\n]+~', '', $security);// delete enter from end line
                 if ($security[0] == 'pass') {
                     if ($security[1] == @$_SESSION[$nazwa]) {
                         $fp = fopen($file, 'r');
                         $dane = fread($fp, $size);
+                        $this->crypt == 1 ? $dane = $this->decrypt($dane) : $sec = 'off'; // for text coding/decoding
                         return $dane;
                         fclose($fp);
                     } else {
@@ -67,6 +46,7 @@ class Notatnik
                 } else {
                     $fp = fopen($file, 'r');
                     $dane = fread($fp, $size);
+                    $this->crypt == 1 ? $dane = $this->decrypt($dane) : $sec = 'off'; // for text coding/decoding
                     return $dane;
                     fclose($fp);
                 }             
@@ -84,6 +64,7 @@ class Notatnik
             $fp = fopen($file, 'r');
             $size = filesize($file);
             $chsec = fgets($fp);
+            $this->crypt == 1 ? $chsec = $this->decrypt($chsec) : $sec = 'off'; // for text coding/decoding
             fclose($fp);
             $security = explode (':',$chsec);
             if ($security[0] == 'pass') {
@@ -103,19 +84,19 @@ class Notatnik
         $sort_n = array();
         foreach ($arr as $file) {
             $src = new SplFileInfo($file);
-            //get only extension of file
+            // get only extension of file
             $ext = $src->getExtension();
             if ($file != '.' && $file != '..' && !is_dir($file) && $ext !='php') {
-                //get only file name
+                // get only file name
                 $name = $src->getBasename('.txt');
-                //add file name to array
+                // add file name to array
                 $sort_n[] .= $name;
             }
         }
         $_SESSION['count'] = count($sort_n);
-        //sortowanie numerycznie
+        // sort numerically
         usort($sort_n, 'strnatcasecmp');
-        //sortowanie alfabetycznie  
+        // sort alphabetically 
         $wyn = array();
         foreach ($sort_n as $un) {
             $un = explode('.', $un);
@@ -179,12 +160,12 @@ class Notatnik
         $sort_n = array();
         foreach ($arr as $file) {
             $src = new SplFileInfo($file);
-            //get only extension of file
+            // get only extension of file
             $ext = $src->getExtension();
             if ($file != '.' && $file != '..' && !is_dir($file) && $ext !='php') {
-                //get only file name
+                // get only file name
                 $name = $src->getBasename('.txt');
-                //add file name to array
+                // add file name to array
                 $sort_n[] .= $name;
             }
         }        
@@ -200,11 +181,6 @@ class Notatnik
         }   
         header('Refresh:0; url='.$_SERVER['PHP_SELF']);
     }
-    // public function __setSortMod($mod)
-    // {
-        // setcookie ('sort', $mod, time() + 3600*24*30*12);
-        // //header('location:');
-    // }
     public function createDir()
     {
         if (! is_dir('data/'.$this->user)) {
@@ -223,19 +199,19 @@ class Notatnik
         }
         $file = 'users/'.$login.'.txt';
 		if (! file_exists($file)) {	
-            // Sprawdzam poprawność danych
+            // Checking data is data correct
             if ($password === $re_password) {
                 if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                    // zaczynamy tworzenie
+                    // start creating
                     $fp = fopen($file, 'w');
                     $zawartosc = md5($password).':&|&:'.$email;
                     // save data
                     fputs($fp, $zawartosc);
                     // close file
                     fclose($fp);
-                    // set premision
+                    // set permission
                     chmod($file, 0777);
-                    setcookie('auth',$login,time()+3600*12);// pol dnia pamieta logowanie
+                    setcookie('auth',$login,time()+3600*12);// first login remember half day
                     header('location: ');
                 } else {
                     return 'Błedna forma adresu email.';
@@ -244,7 +220,7 @@ class Notatnik
                 return 'Hasła nie są zgodne.';
             }
         } else {
-            // użytkownik istnieje
+            // user exist
             return $login.' login zajęty.';
         }
     }
@@ -252,23 +228,17 @@ class Notatnik
     {
         $file = 'users/'.$login.'.txt';
 		if (file_exists($file)) {
-            //open file
 			$fp = fopen($file, 'r');
-            //check size
             $size = filesize($file);
             if ($size > 0 ) {
-                //read file
                 $dane = fread($fp, $size);
-                //close file
                 fclose($fp);
                 $user = explode(':&|&:', $dane);
                 if ($user[0] === md5($password) && ! isset($_POST['remember_me'])) {
-                    setcookie('auth',$login,time()+3600*12);// pol dnia pamieta logowanie
-                    /*?><script> alert('12h'); </script><?php*/
+                    setcookie('auth',$login,time()+3600*12);// remember half day
                     header('location: ?file='.$_GET['file']);
                 } elseif ($user[0] === md5($password) && isset($_POST['remember_me'])) {
-                    setcookie('auth',$login,time()+3600*24*365);// rok pamieta logowanie
-                    /*?><script> alert('rok'); </script><?php*/
+                    setcookie('auth',$login,time()+3600*24*365);// remember one year
                     header('location: ?file='.$_GET['file']);
                 } else {
                     return 'Błędne hasło';
@@ -285,6 +255,28 @@ class Notatnik
         setcookie ('auth', '', time() - 3600);
         header('location: index.php');
     }
+    public function encrypt($pure_string)  // for text coding/decoding
+    {
+        /**
+        * Returns an encrypted & utf8-encoded
+        */
+        $iv_size = mcrypt_get_iv_size(MCRYPT_BLOWFISH, MCRYPT_MODE_ECB);
+        $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
+        $encrypted_string = mcrypt_encrypt(MCRYPT_BLOWFISH,  $this->encryption_key, utf8_encode($pure_string), MCRYPT_MODE_ECB, $iv);
+        return $encrypted_string;
+    }
+
+    
+    public function decrypt($encrypted_string)  // for text coding/decoding
+    {
+        /**
+        * Returns decrypted original string
+        **/
+        $iv_size = mcrypt_get_iv_size(MCRYPT_BLOWFISH, MCRYPT_MODE_ECB);
+        $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
+        $decrypted_string = mcrypt_decrypt(MCRYPT_BLOWFISH,  $this->encryption_key, $encrypted_string, MCRYPT_MODE_ECB, $iv);
+        return $decrypted_string;
+    }
 }
 $rec = new Notatnik;
 $rec->__setUser(@$_COOKIE['auth']);
@@ -294,7 +286,7 @@ $rec->createDir();
 (isset($_POST['save']) && (trim(@$_POST['txt']) != 'Enter password') && isset($_POST['txt'])) ? $rec->__setTXT($_GET['file'], $_POST['txt']) : 'error1';
 isset($_POST['add']) && ! empty($_POST['new_name']) ? $rec->__setTXT($_SESSION['count'].'.'.(str_replace('.', ',', $_POST['new_name'])), '') : 'error2';
 isset($_POST['confirm']) && !empty($_POST['rename']) ? $rec->changeName() : 'error2';
-$rec->__getNameTab();//wywołuje żeby sesja count sie zapisała dla css kolorowego
+$rec->__getNameTab();// calls to the session count is start save for css color !important
 isset($_POST['del_confirm']) ? $rec->deleteName() : 'error5';
 isset($_POST['setting']) ? header('location: setting.php') : 'error7';
 /***************************************************************************************/
@@ -339,36 +331,23 @@ if (isset($_POST['file_protect'])){
         var txt2 = $.trim($(".txtarea").val());
         var txt3 = "Enter password";
         if (txt2 != txt3) {
-            //alert(txt2);
-            
             can = 0;
-            //return can;
         } else {
             $("textarea").attr("disabled", true);
         }
         var oldVal = "";
         $(".txtarea").on("change keyup paste", function() {
-            //var currentVal = $(this).val();
-            //if(currentVal == oldVal) {
-                //return; //check to prevent multiple simultaneous triggers
-            //}
-            
-            //oldVal = currentVal;
-            //action to be performed on textarea changed
-            //alert("changed!");
             if (txt2 != txt3) {
-                //alert(txt2);
-                
                 can = 0;
-                //return can;
             } else {
                 $("textarea").attr("disabled", true);
             }
         });
-        //alert(can);
         if (can == 0) {
             <?php if (isset($_COOKIE['savemod0'])) { ?>
-            // Save Form alt+s
+            /**
+            * Save Form alt+s
+            **/
             $(window).keypress(function(event) 
             {
                 if (!(event.which == 115 && event.ctrlKey) && !(event.which == 19)) return true;
@@ -379,84 +358,64 @@ if (isset($_POST['file_protect'])){
             });
             <?php } ?>
             <?php if (isset($_COOKIE['savemod1'])) { ?>
-            // Save when link clicked
+            /**
+            * Save when link clicked
+            **/
             $('.links').click(function()
             {
                 var txt = $(".txtarea").val();
-                //alert(txt);
                 var get = <?php echo json_encode($_GET['file']); ?>;
-                //alert(get);
                 $.ajax({ 
                     async: false,
                     type: 'POST', 
                     url: 'save.php',
                     data: {text : txt, file : get},
                     success: function(){
-                                //alert('save');
-                                //location.href = 'index.php';
-                            }
+                        // do something
+                    }
                 });
             });
             <?php } ?>
             <?php if (isset($_COOKIE['savemod2'])) { ?>
-            // Save when protect clicked
+            /**
+            * Save when protect clicked
+            **/
             $('.security').click(function()
             {
                 var txt = $(".txtarea").val();
-                //alert(txt);
                 var get = <?php echo json_encode($_GET['file']); ?>;
-                //alert(get);
                 $.ajax({ 
                     async: false,
                     type: 'POST', 
                     url: 'save.php',
                     data: {text : txt, file : get},
                     success: function(){
-                                //alert('save');
-                                //location.href = 'index.php';
-                            }
+                        // do something
+                    }
                 });
             });
             <?php } ?>
             <?php if (isset($_COOKIE['savemod3'])) { ?>
-            // Save when logout
+            /**
+            * Save when logout
+            **/
             $('input[name=logout]').click(function()
             {
                 var txt = $(".txtarea").val();
-                //alert(txt);
                 var get = <?php echo json_encode($_GET['file']); ?>;
-                //alert(get);
                 $.ajax({ 
                     async: false,
                     type: 'POST', 
                     url: 'save.php',
                     data: {text : txt, file : get},
                     success: function(){
-                                //alert('save');
-                                //location.href = 'index.php';
-                            }
+                        // do something
+                    }
                 });
             });
             <?php } ?>
         }
     });
-    // $(document).ready(function()
-    // {
-        // // sorting change
-        // $('input[name=sorting]').click(function()
-        // {
-            // // Set cookie when sorting click
-            // var mod = $(this).val();
-            // //alert(mod);
-            // $.ajax({ 
-                // async: false,
-                // type: 'POST', 
-                // url: 'setcookie.php',
-                // data: {value : mod}
-            // });
-            // $("form input[name=anuluj]").click();//anuluj tylko po to by odświeżyć strone     
-        // });
-    // });
     <?php } ?>
     $(document).ready(function()
     {
@@ -491,45 +450,26 @@ if (isset($_POST['file_protect'])){
     </script>
     <script type="text/javascript">   
         $(document).ready(function () {
-            //alert('redy');
+            /**
+            * Allow sort item jQuery UI
+            **/
             $('#sort').sortable({
                 axis: 'xy',
                 stop: function (event, ui) {
                     var data = $(this).sortable('serialize');
-                    //var href = $('a').attr('href');
-                    //alert(href);
-                    //$('#1').text(data);
                     $.ajax({
                         async: false,
                         type: 'POST',
                         url: 'rename.php',
                         data: {data:data},
                         success: function(){
-                            //alert('success');
-                            //location.href = 'index.php';
+                            // do something
                         }
                     });
             }
             });
-            //88
-            // $('textarea').click(function()
-            // {
-                // $.ajax({
-                    // type: "GET",
-                    // url: "rename.php",
-                    // pobierz: function (XMLHttpRequest) {
-                        // $("#divek").html("Trwa pobieranie danych.");
-                    // },
-                    // success: function(msg) {
-                        // $("#divek").html(msg);
-                    // },
-                    // error: function (XMLHttpRequest, textStatus, errorThrown) {
-                        // $("#divek").html('Przepraszamy, dane nie mogą zostać wyśietlone.');
-                    // }
-                // });
-            // });
             /**
-            *   Blokowanie znaków specjalnych w inputach
+            *   Block special chars in text input
             **/
             $('[name="login"],[name="rename"],[name="new_name"],[name="file_protect_password"]').bind('keypress', function (event) {//,[name="password"],[name="re_password"]
                 var regex = new RegExp("^[a-zA-Z0-9]+$");
@@ -555,7 +495,6 @@ if (isset($_POST['file_protect'])){
             });
             // var wasPressed = false;
             // document.onkeydown = f1;
-
             // function f1(e){
             // e = e || window.event;
             // if( wasPressed ) return;
@@ -608,7 +547,7 @@ if (isset($_POST['file_protect'])){
         <form method="POST">
             <textarea class="txtarea" name="txt" ><?php echo isset($_COOKIE['auth']) ? $rec->__getTXT($_GET['file']) : 'Enter Password'; ?></textarea><br />           
             <?php if(isset($_COOKIE['auth'])) { ?>
-                <input type="submit" name="save" value="Zapisz" /><!--DOpisany do JS-->
+                <input type="submit" name="save" value="Zapisz" /><!--Dopisany do JS-->
                 <span class="bottom">
                     <input id="new" type="button" name="new" value="Nowy" />
                     <input class="hidden" type="text" name="new_name" />
@@ -632,13 +571,6 @@ if (isset($_POST['file_protect'])){
                         <input class="security"  type="submit" name="file_protect" value="Zablokuj" />
                     <?php } ?>
                 <?php } ?>
-                <!--
-                <span class="bottom">
-                    Sortowanie :
-                    <label><input class="radio" type="radio" <?php //echo (@$_COOKIE['sort']=='0') ? 'checked="checked"' : '';  ?> name="sorting" value="0" /><label>Kolejność tworzenia</label></label>
-                    <label><input class="radio" type="radio" <?php //echo (@$_COOKIE['sort']=='1') ? 'checked="checked"' : '';  ?> name="sorting" value="1" /><label>Alfabetycznie</label></label>
-                </span>
-                -->
                 <input class="right" type="submit" name="logout" value="Wyloguj" />
                 <input id="setting" class="right" type="submit" name="setting" value="Ustawienia" />
             <?php } ?>
@@ -662,7 +594,7 @@ if (isset($_POST['file_protect'])){
 ?>
 <?php
 // define("ENCRYPTION_KEY", "!@#$%^&*");
-// $string = "This is the original data string!";
+// $string = "This is the original data string! asdfasfa asfasf afasfa";
 
 // echo $encrypted = encrypt($string, ENCRYPTION_KEY);
 // echo "<br />";
