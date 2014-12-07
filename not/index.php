@@ -531,16 +531,41 @@ if (isset($_POST['file_protect'])){
             /**
             *   Blokowanie znaków specjalnych w inputach
             **/
-            $('input').bind('keypress', function (event) {
+            $('[name="login"],[name="rename"],[name="new_name"],[name="file_protect_password"]').bind('keypress', function (event) {//,[name="password"],[name="re_password"]
                 var regex = new RegExp("^[a-zA-Z0-9]+$");
                 var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
-                if (!regex.test(key) && event.which != 8) {//8 backspace
+                if (!regex.test(key) && event.which != 8 && event.keyCode != 116) {//8 backspace//116 F5
                    console.log('zablokowane');
                    console.log(event.which);
                    event.preventDefault();
                    return false;
                 }
             });
+            $('[name="email"]').bind('keypress', function (event) {
+                var regex = new RegExp("^[a-zA-Z0-9]+$");
+                var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+                var allow = $.inArray( event.which, [ 8, 45, 46, 64, 95 ]);
+                console.log('Allow: '+allow);
+                if (!regex.test(key) && allow == -1 && event.keyCode != 116) {//8 backspace//116 F5
+                   console.log('zablokowane');
+                   console.log(event.which);
+                   event.preventDefault();
+                   return false;
+                }
+            });
+            // var wasPressed = false;
+            // document.onkeydown = f1;
+
+            // function f1(e){
+            // e = e || window.event;
+            // if( wasPressed ) return;
+                // if (e.keyCode == 116) {
+                     // alert("f5 pressed");
+                    // wasPressed = true;
+                // }else {
+                    // alert("Window closed");
+                // }
+            // }
         });
     </script>    
     <script type="text/javascript"></script>
