@@ -7,10 +7,30 @@ class Notatnik
 {
     private $user;
     private $encryption_key = 'mysecretkey'; // for text coding/decoding
-    private $crypt = 0; // for text coding/decoding
+    private $crypt; // for text coding/decoding
+    private $key = 'My strong random secret key';
     public function __setUser($user)
     {
         $this->user = $user;
+    }
+    public function __setCrypt()
+    {
+        $file = 'users/'.$this->user.'.txt';
+		if (file_exists($file)) {
+			$fp = fopen($file, 'r');
+            $size = filesize($file);
+            if ($size > 0 ) {
+                $dane = fread($fp, $size);
+                fclose($fp);
+                $user = explode(':&|&:', $dane);
+                if (isset($user[2])){ //zabezpieczenie dla tych co nie maja ustawione jeszcze nic
+                    $user[2] == 1 ? $this->crypt = 1 : $this->crypt = 0;
+                    return $this->crypt;
+                } else {
+                    return $this->crypt = 0;
+                }
+            }
+        }
     }
 	public function __setTXT($nazwa, $zawartosc)
     {
@@ -204,7 +224,9 @@ class Notatnik
                 if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
                     // start creating
                     $fp = fopen($file, 'w');
-                    $zawartosc = md5($password).':&|&:'.$email;
+                    // encrypt or on
+                    isset($_POST['encrypt']) ? $encrypt = 1 : $encrypt = 0;
+                    $zawartosc = md5($password).':&|&:'.$email.':&|&:'.$encrypt;
                     // save data
                     fputs($fp, $zawartosc);
                     // close file
@@ -255,31 +277,33 @@ class Notatnik
         setcookie ('auth', '', time() - 3600);
         header('location: index.php');
     }
-    public function encrypt($pure_string)  // for text coding/decoding
+    public function encrypt($string)  // for text coding/decoding
     {
         /**
         * Returns an encrypted & utf8-encoded
         */
-        $iv_size = mcrypt_get_iv_size(MCRYPT_BLOWFISH, MCRYPT_MODE_ECB);
-        $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
-        $encrypted_string = mcrypt_encrypt(MCRYPT_BLOWFISH,  $this->encryption_key, utf8_encode($pure_string), MCRYPT_MODE_ECB, $iv);
-        return $encrypted_string;
+        $iv = md5(md5($this->key));
+        $output = mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($this->key), $string, MCRYPT_MODE_CBC, $iv);
+        $output = base64_encode($output);
+        return $output;
     }
 
     
-    public function decrypt($encrypted_string)  // for text coding/decoding
+    public function decrypt($string)  // for text coding/decoding
     {
         /**
         * Returns decrypted original string
         **/
-        $iv_size = mcrypt_get_iv_size(MCRYPT_BLOWFISH, MCRYPT_MODE_ECB);
-        $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
-        $decrypted_string = mcrypt_decrypt(MCRYPT_BLOWFISH,  $this->encryption_key, $encrypted_string, MCRYPT_MODE_ECB, $iv);
-        return $decrypted_string;
+        $iv = md5(md5($this->key));
+        $output = mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5($this->key), base64_decode($string), MCRYPT_MODE_CBC, $iv);
+        //$output = rtrim($output, "");
+        $output = trim($output, "\0\4");
+        return $output;
     }
 }
 $rec = new Notatnik;
 $rec->__setUser(@$_COOKIE['auth']);
+$rec->__setCrypt();
 $rec->createDir();
 
 ! isset($_GET['file']) ? $_GET['file'] = '0.start' : $error = 'Utworz nowy plik' ;
@@ -538,6 +562,7 @@ if (isset($_POST['file_protect'])){
                 <input type="text" name="password" placeholder="hasło" />
                 <input type="text" name="re_password" placeholder="powtórz hasło" />
                 <input type="text" name="email" value="email" />
+                <input type="checkbox" name="encrypt" />Szyfruj pliki&nbsp;
                 <input type="submit" name="save_user" value="Dodaj" />
                 <input type="submit" name="cancel" value="Anuluj" />
             <?php } else { ?>
@@ -581,7 +606,7 @@ if (isset($_POST['file_protect'])){
 </body>
 </html>
 <?php
-    //var_dump ($_POST);
+    var_dump ($_POST);
     //var_dump ($_GET);
     //var_dump ($_SESSION);
     //var_dump ($_COOKIE);
@@ -620,4 +645,45 @@ if (isset($_POST['file_protect'])){
     // $decrypted_string = mcrypt_decrypt(MCRYPT_BLOWFISH, $encryption_key, $encrypted_string, MCRYPT_MODE_ECB, $iv);
     // return $decrypted_string;
 // }
+// function encrypt_decrypt($action, $string) {
+   // $output = false;
+
+   // $key = 'My strong random secret key';
+
+   // // initialization vector 
+   // $iv = md5(md5($key));
+
+   // if( $action == 'encrypt' ) {
+        // $output = mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($key), $string, MCRYPT_MODE_CBC, $iv);
+        // $output = base64_encode($output);
+   // }
+   // else if( $action == 'decrypt' ){
+       // $output = mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5($key), base64_decode($string), MCRYPT_MODE_CBC, $iv);
+       // $output = rtrim($output, "");
+   // }
+   // return $output;
+// }
+// public function encrypt($string)
+// {
+    // $iv = md5(md5($this->key));
+    // $output = mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($this->key), $string, MCRYPT_MODE_CBC, $iv);
+    // $output = base64_encode($output);
+// }
+// public function decrypt($string)
+// {
+    // $iv = md5(md5($this->key));
+    // $output = mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5($this->key), base64_decode($string), MCRYPT_MODE_CBC, $iv);
+    // $output = rtrim($output, "");
+// }
+
+
+
+
+// $plain_txt = $rec->__getTXT($_GET['file']);
+
+// $encrypted_txt = encrypt_decrypt('encrypt', $plain_txt);
+// echo "Encrypted Text = $encrypted_txt\n";
+// echo "<br />";
+// $decrypted_txt = encrypt_decrypt('decrypt', $encrypted_txt);
+// echo "Decrypted Text = $decrypted_txt\n";
 ?>
