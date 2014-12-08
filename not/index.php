@@ -606,7 +606,7 @@ if (isset($_POST['file_protect'])){
 </body>
 </html>
 <?php
-    var_dump ($_POST);
+    //var_dump ($_POST);
     //var_dump ($_GET);
     //var_dump ($_SESSION);
     //var_dump ($_COOKIE);
@@ -616,74 +616,4 @@ if (isset($_POST['file_protect'])){
     //}
     //echo $_SESSION['count'];
     //unset($_SESSION['count'])
-?>
-<?php
-// define("ENCRYPTION_KEY", "!@#$%^&*");
-// $string = "This is the original data string! asdfasfa asfasf afasfa";
-
-// echo $encrypted = encrypt($string, ENCRYPTION_KEY);
-// echo "<br />";
-// echo $decrypted = decrypt($encrypted, ENCRYPTION_KEY);
-
-// /**
- // * Returns an encrypted & utf8-encoded
- // */
- 
-// function encrypt($pure_string, $encryption_key) {
-    // $iv_size = mcrypt_get_iv_size(MCRYPT_BLOWFISH, MCRYPT_MODE_ECB);
-    // $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
-    // $encrypted_string = mcrypt_encrypt(MCRYPT_BLOWFISH, $encryption_key, utf8_encode($pure_string), MCRYPT_MODE_ECB, $iv);
-    // return $encrypted_string;
-// }
-
-// /**
- // * Returns decrypted original string
- // */
-// function decrypt($encrypted_string, $encryption_key) {
-    // $iv_size = mcrypt_get_iv_size(MCRYPT_BLOWFISH, MCRYPT_MODE_ECB);
-    // $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
-    // $decrypted_string = mcrypt_decrypt(MCRYPT_BLOWFISH, $encryption_key, $encrypted_string, MCRYPT_MODE_ECB, $iv);
-    // return $decrypted_string;
-// }
-// function encrypt_decrypt($action, $string) {
-   // $output = false;
-
-   // $key = 'My strong random secret key';
-
-   // // initialization vector 
-   // $iv = md5(md5($key));
-
-   // if( $action == 'encrypt' ) {
-        // $output = mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($key), $string, MCRYPT_MODE_CBC, $iv);
-        // $output = base64_encode($output);
-   // }
-   // else if( $action == 'decrypt' ){
-       // $output = mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5($key), base64_decode($string), MCRYPT_MODE_CBC, $iv);
-       // $output = rtrim($output, "");
-   // }
-   // return $output;
-// }
-// public function encrypt($string)
-// {
-    // $iv = md5(md5($this->key));
-    // $output = mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($this->key), $string, MCRYPT_MODE_CBC, $iv);
-    // $output = base64_encode($output);
-// }
-// public function decrypt($string)
-// {
-    // $iv = md5(md5($this->key));
-    // $output = mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5($this->key), base64_decode($string), MCRYPT_MODE_CBC, $iv);
-    // $output = rtrim($output, "");
-// }
-
-
-
-
-// $plain_txt = $rec->__getTXT($_GET['file']);
-
-// $encrypted_txt = encrypt_decrypt('encrypt', $plain_txt);
-// echo "Encrypted Text = $encrypted_txt\n";
-// echo "<br />";
-// $decrypted_txt = encrypt_decrypt('decrypt', $encrypted_txt);
-// echo "Decrypted Text = $decrypted_txt\n";
 ?>
