@@ -498,7 +498,7 @@ if (isset($_POST['file_protect'])){
             $('[name="login"],[name="rename"],[name="new_name"],[name="file_protect_password"]').bind('keypress', function (event) {//,[name="password"],[name="re_password"]
                 var regex = new RegExp("^[a-zA-Z0-9]+$");
                 var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
-                if (!regex.test(key) && event.which != 8 && event.keyCode != 116) {//8 backspace//116 F5
+                if (!regex.test(key) && event.which != 8 && event.keyCode != 9 && event.keyCode != 116) {//8 backspace//116 F5//9 tab
                    console.log('zablokowane');
                    console.log(event.which);
                    event.preventDefault();
@@ -510,7 +510,7 @@ if (isset($_POST['file_protect'])){
                 var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
                 var allow = $.inArray( event.which, [ 8, 45, 46, 64, 95 ]);
                 console.log('Allow: '+allow);
-                if (!regex.test(key) && allow == -1 && event.keyCode != 116) {//8 backspace//116 F5
+                if (!regex.test(key) && allow == -1 && event.keyCode != 9 && event.keyCode != 116) {//8 backspace//116 F5//9tab
                    console.log('zablokowane');
                    console.log(event.which);
                    event.preventDefault();
