@@ -530,6 +530,53 @@ if (isset($_POST['file_protect'])){
                 // }
             // }
         });
+        $(function(){
+            // $( '#area' ).focus();
+            // document.getElementById('area').setSelectionRange(3,11);
+            // //document.getElementById('area').setSelectionRange(3,3);
+            // $( '#area' ).click(function(){
+                // var one = $('#area')[0].selectionStart;
+                // var two = $('#area')[0].selectionEnd;
+                // //console.log(one);
+                // //console.log(two);
+            // });
+            function insertAtCursor(myField, myValue) {
+                //IE support
+                if (document.selection) {
+                    myField.focus();
+                    sel = document.selection.createRange();
+                    sel.text = myValue;
+                }
+                //MOZILLA/NETSCAPE support
+                else if (myField.selectionStart || myField.selectionStart == '0') {
+                    var startPos = myField.selectionStart;
+                    var endPos = myField.selectionEnd;
+                    myField.value = myField.value.substring(0, startPos)
+                    + myValue
+                    + myField.value.substring(endPos, myField.value.length);
+                    // position cursor at end
+                    myField.selectionStart = startPos + myValue.length;
+                    myField.selectionEnd = endPos + myValue.length;
+                    //myField.focus();
+                } else {
+                    myField.value += myValue;
+                }
+            }
+            // calling the function
+            $(document).on('keydown', '#area', function(e) { 
+                var keyCode = e.keyCode || e.which; 
+                if (keyCode == 9) { 
+                e.preventDefault(); 
+                    // call custom function here
+                    var tabs = '    ';
+                    //console.log(tabs.length);
+                    //var one = $('#asd')[0].selectionStart + tabs.length;
+                    //var two = $('#asd')[0].selectionEnd + tabs.length;
+                    insertAtCursor(document.getElementById('area'), tabs);
+                    //document.getElementById('asd').setSelectionRange(one,two);
+                } 
+            });
+        });
     </script>    
     <script type="text/javascript"></script>
     <style type="text/css">
@@ -570,7 +617,7 @@ if (isset($_POST['file_protect'])){
             <?php } ?>          
         </form>
         <form method="POST">
-            <textarea class="txtarea" name="txt" ><?php echo isset($_COOKIE['auth']) ? $rec->__getTXT($_GET['file']) : 'Enter Password'; ?></textarea><br />           
+            <textarea id="area" class="txtarea" name="txt" ><?php echo isset($_COOKIE['auth']) ? $rec->__getTXT($_GET['file']) : 'Enter Password'; ?></textarea><br />           
             <?php if(isset($_COOKIE['auth'])) { ?>
                 <input type="submit" name="save" value="Zapisz" /><!--Dopisany do JS-->
                 <span class="bottom">
