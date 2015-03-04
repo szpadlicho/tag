@@ -370,7 +370,7 @@ if (isset($_POST['file_protect'])){
         if (can == 0) {
             <?php if (isset($_COOKIE['savemod0'])) { ?>
             /**
-            * Save Form alt+s
+            * Save Form ctrl+s
             **/
             $(window).keypress(function(event) 
             {
@@ -379,6 +379,37 @@ if (isset($_POST['file_protect'])){
                 event.preventDefault();
                 return false;
                 alert('save');
+            });
+            /**
+            * Save Form ctrl+s for chrome
+            **/
+            $(document).bind('keydown', function(e) {
+                /**
+                * Detect right alt pressed !important
+                * ctrl and alt its the same key detect in browser
+                **/
+                // var arr2 = [];
+                // arr2.push(e.which);
+                // console.log(e.which);
+                if (e.which == 18) {
+                    var lalt = true;
+                    console.log(lalt);
+                }
+            });
+            $(document).bind('keydown', function(e) {
+                /**
+                * Save Form ctrl+s with right alt detect
+                **/
+                //console.log(lalt);
+                if(typeof lalt === 'undefined') {
+                    var lalt = false;
+                }
+                if(e.ctrlKey && (e.which == 83) && lalt != true) {
+                    $('form input[name=save]').click();
+                    e.preventDefault();
+                    return false;
+                    alert('Ctrl+S');
+                }
             });
             <?php } ?>
             <?php if (isset($_COOKIE['savemod1'])) { ?>
@@ -496,9 +527,9 @@ if (isset($_POST['file_protect'])){
             *   Block special chars in text input
             **/
             $('[name="login"],[name="rename"],[name="new_name"],[name="file_protect_password"]').bind('keypress', function (event) {//,[name="password"],[name="re_password"]
-                var regex = new RegExp("^[a-zA-Z0-9]+$");
+                var regex = new RegExp("^[a-zA-Z0-9ąćśńółęĄĆŚŃÓŁĘ]+$");//ąćśńółęĄĆŚŃÓŁĘ
                 var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
-                if (!regex.test(key) && event.which != 8 && event.keyCode != 9 && event.keyCode != 116) {//8 backspace//116 F5//9 tab
+                if (!regex.test(key) && event.which != 8 && event.keyCode != 9 && event.keyCode != 116 && event.keyCode != 32 && event.keyCode != event.shiftKey && event.keyCode != event.altKey) {//8 backspace//116 F5//9 tab//32 spacja
                    console.log('zablokowane');
                    console.log(event.which);
                    event.preventDefault();

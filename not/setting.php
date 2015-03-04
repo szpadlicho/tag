@@ -4,17 +4,27 @@ class Setting
     function __setSortMod($mod)
     {
         setcookie ('sort', $mod, time() + 3600*24*30*12);
-        header('location:');
+        //sleep(1);
+        $this->refresh();
+        //header('location:');
     }
     function __setSaveMod($name)
     {
         setcookie ($name, $name, time() + 3600*24*30*12);
-        header('location:');
+        //sleep(1);
+        $this->refresh();
+        //header('location:');
     }
     function __unsetSaveMod($name)
     {
         setcookie ($name, $name, time() - 3600*24*30*12);
-        header('location:');
+        //sleep(1);
+        $this->refresh();
+        //header('location:');
+    }
+    function refresh()
+    {
+        header('location: setting.php');
     }
 }
 $rec = new Setting();
@@ -47,7 +57,7 @@ if (isset($_POST['save'])){
         });
         $('input[type=checkbox]').click(function()
         {
-            $("form input[name=save]").click();      
+            $("form input[name=save]").click();
         });
     });    
     </script>          
@@ -60,8 +70,8 @@ if (isset($_POST['save'])){
         <form method="POST">
         <span class="bottom">
             Sortowanie :
-            <label><input class="radio" type="radio" <?php echo (@$_COOKIE['sort']=='0') ? 'checked="checked"' : '';  ?> name="sorting" value="0" /><label>Kolejność tworzenia</label></label>
-            <label><input class="radio" type="radio" <?php echo (@$_COOKIE['sort']=='1') ? 'checked="checked"' : '';  ?> name="sorting" value="1" /><label>Alfabetycznie</label></label>
+            <label><input id="sort0" class="radio" type="radio" <?php echo (@$_COOKIE['sort']=='0') ? 'checked="checked"' : '';  ?> name="sorting" value="0" /><label for="sort0">Kolejność tworzenia</label></label>
+            <label><input id="sort1" class="radio" type="radio" <?php echo (@$_COOKIE['sort']=='1') ? 'checked="checked"' : '';  ?> name="sorting" value="1" /><label for="sort1">Alfabetycznie</label></label>
             <input class="hidden_sec" type="submit" name="set" value="Ustaw" />
         </span>
         </form>
@@ -69,10 +79,10 @@ if (isset($_POST['save'])){
         <form method="POST">
         <span class="bottom">
             Zapisywanie :
-            <label><input class="radio" type="checkbox" <?php echo (isset($_COOKIE['savemod0'])) ? 'checked="checked"' : '';  ?> name="saving0" value="savemod0" /><label>Ctrl+S</label></label>
-            <label><input class="radio" type="checkbox" <?php echo (isset($_COOKIE['savemod1'])) ? 'checked="checked"' : '';  ?> name="saving1" value="savemod1" /><label>Link click</label></label>
-            <label><input class="radio" type="checkbox" <?php echo (isset($_COOKIE['savemod2'])) ? 'checked="checked"' : '';  ?> name="saving2" value="savemod2" /><label>Zablokuj click</label></label>
-            <label><input class="radio" type="checkbox" <?php echo (isset($_COOKIE['savemod3'])) ? 'checked="checked"' : '';  ?> name="saving3" value="savemod3" /><label>Wyloguj click</label></label>
+            <input id="savemod0" class="radio" type="checkbox" <?php echo (isset($_COOKIE['savemod0'])) ? 'checked="checked"' : '';  ?> name="saving0" value="savemod0" /><label for="savemod0">Ctrl+S</label>
+            <input id="savemod1" class="radio" type="checkbox" <?php echo (isset($_COOKIE['savemod1'])) ? 'checked="checked"' : '';  ?> name="saving1" value="savemod1" /><label for="savemod1">Link click</label>
+            <input id="savemod2" class="radio" type="checkbox" <?php echo (isset($_COOKIE['savemod2'])) ? 'checked="checked"' : '';  ?> name="saving2" value="savemod2" /><label for="savemod2">Zablokuj click</label>
+            <input id="savemod3" class="radio" type="checkbox" <?php echo (isset($_COOKIE['savemod3'])) ? 'checked="checked"' : '';  ?> name="saving3" value="savemod3" /><label for="savemod3">Wyloguj click</label>
             <input class="hidden_sec" type="submit" name="save" value="Zapisz" />
         </span>
         </form>

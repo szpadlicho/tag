@@ -90,12 +90,15 @@ a.links:visited{}
 }
 label{
     padding:0 1em;
+    white-space: nowrap;
 }
 .radio + label{
     color:red;
+    white-space: nowrap;
 }
 .radio:checked  + label{
     color:green;
+    white-space: nowrap;
 }
 /*Neon*/
 @font-face {
