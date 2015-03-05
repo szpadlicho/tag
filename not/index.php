@@ -369,8 +369,14 @@ if (isset($_POST['file_protect'])){
         });
         if (can == 0) {
             <?php if (isset($_COOKIE['savemod0'])) { ?>
+            //$(window).bind('keydown', function(event) {
+            //console.log(event.which);
+            //console.log(event.ctrlKey);
+            //console.log(event.altKey);
+            //console.log(event.keyCode);
+            //});
             /**
-            * Save Form ctrl+s
+            * save form ctrl+s
             **/
             $(window).keypress(function(event) 
             {
@@ -380,31 +386,29 @@ if (isset($_POST['file_protect'])){
                 return false;
                 alert('save');
             });
-            /**
-            * Save Form ctrl+s for chrome
-            **/
+            // /**
+            // * Save Form ctrl+s for chrome
+            // **/
+            // $(document).bind('keydown', function(e) {
+                // /**
+                // * Detect right alt pressed !important
+                // * ctrl and alt its the same key detect in browser
+                // **/
+                // // var arr2 = [];
+                // // arr2.push(e.which);
+                // // console.log(e.which);
+                // if (e.which == 18) {
+                    // var lalt = true;
+                    // //e.preventDefault();
+                    // //return false;
+                    // console.log(lalt);
+                // }
+            // });
             $(document).bind('keydown', function(e) {
                 /**
-                * Detect right alt pressed !important
-                * ctrl and alt its the same key detect in browser
+                * Save Form ctrl+s chrome
                 **/
-                // var arr2 = [];
-                // arr2.push(e.which);
-                // console.log(e.which);
-                if (e.which == 18) {
-                    var lalt = true;
-                    console.log(lalt);
-                }
-            });
-            $(document).bind('keydown', function(e) {
-                /**
-                * Save Form ctrl+s with right alt detect
-                **/
-                //console.log(lalt);
-                if(typeof lalt === 'undefined') {
-                    var lalt = false;
-                }
-                if(e.ctrlKey && (e.which == 83) && lalt != true) {
+                if(e.ctrlKey && (e.which == 83)) {
                     $('form input[name=save]').click();
                     e.preventDefault();
                     return false;
